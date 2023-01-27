@@ -8,7 +8,9 @@ So this application is for providing the platform that can connect those small j
 # Setup
 
 - Download the Code
+
 Using git
+
 git clone https://github.com/Jinyoung-s/jobless
 
 
