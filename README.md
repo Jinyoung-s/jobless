@@ -7,10 +7,15 @@ So this application is for providing the platform that can connect those small j
 
 # Setup
 
+- install expo-cli
+```
+npm i -g expo-cli
+```
+
 - Download the Code
-
-Using git
-
+```
 git clone https://github.com/Jinyoung-s/jobless
+```
+
 
 
