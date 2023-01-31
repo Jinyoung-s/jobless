@@ -7,7 +7,7 @@ So this application is for providing the platform that can connect those small j
 
 # Setup
 
-- install expo-cli
+- Install expo-cli
 ```
 npm i -g expo-cli
 ```
@@ -17,7 +17,7 @@ npm i -g expo-cli
 git clone https://github.com/Jinyoung-s/jobless
 ```
 
-- install required dependencies 
+- Install required dependencies 
 
 ```
 npx expo install react-native-web@~0.18.9 react-dom@18.1.0 @expo/webpack-config@^0.17.2
