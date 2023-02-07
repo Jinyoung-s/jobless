@@ -1,3 +1,4 @@
+import ImagePicker from "react-native-image-picker";
 import React, { useState } from "react";
 import {
   View,
