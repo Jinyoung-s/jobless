@@ -165,7 +165,7 @@ export default function App() {
     <ScrollView>
       <View style={styles.container}>
         <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 100 }}>
-          Sign Up
+          Sign Up Now
         </Text>
         <Text
           style={{
