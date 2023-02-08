@@ -57,10 +57,13 @@ const Login = () => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <Button title="Login" onPress={handleLogin} />
-      <TouchableOpacity onPress={handleRegister}>
-        <Text>Register</Text>
-      </TouchableOpacity>
+      <Button round color="#4169E1" title="Login" onPress={handleLogin}>Login</Button>
+      <Text>
+        Don't have an account yet? 
+        <TouchableOpacity onPress={handleRegister}>
+          <Text color="#4169E1"> Register</Text>
+        </TouchableOpacity>
+      </Text>
     </View>
   );
 };

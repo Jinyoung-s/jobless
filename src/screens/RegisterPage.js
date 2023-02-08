@@ -1,13 +1,12 @@
 import ImagePicker from "react-native-image-picker";
+import { Button, Text } from "galio-framework";
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Button,
 } from "react-native";
 
 export default function App() {
@@ -15,11 +14,6 @@ export default function App() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isHidden, setIsHidden] = useState(true);
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [province, setProvince] = useState("");
-  const [postalCode, setPostalCode] = useState("");
   const [birthdate, setBirthday] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
@@ -68,10 +62,6 @@ export default function App() {
   const handleClear = () => {
     setFirstName("");
     setLastName("");
-    setStreet("");
-    setCity("");
-    setProvince("");
-    setPostalCode("");
     setBirthday("");
     setEmail("");
     setPassword("");
@@ -122,34 +112,7 @@ export default function App() {
       alignItems: "center",
       justifyContent: "center",
     },
-    addressContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    btnContainer: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
     textInput: {
-      height: 40,
-      width: "80%",
-      borderColor: "gray",
-      borderWidth: 1,
-      padding: 10,
-      margin: 10,
-    },
-    btnAddress: {
-      height: 40,
-      width: "80%",
-      borderColor: "gray",
-      borderWidth: 1,
-      padding: 10,
-      margin: 10,
-      marginLeft: 37,
-    },
-    btnButtons: {
       height: 40,
       width: "80%",
       borderColor: "gray",
@@ -164,7 +127,7 @@ export default function App() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 100 }}>
+        <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
           Sign Up Now
         </Text>
         <Text
@@ -185,7 +148,7 @@ export default function App() {
           onChangeText={(text) => setFirstName(text)}
         />
         {firstNameError !== "" && (
-          <Text style={{ color: "red" }}>{firstNameError}</Text>
+          <Text color = "red">{firstNameError}</Text>
         )}
 
         <TextInput
@@ -195,7 +158,7 @@ export default function App() {
           onChangeText={(text) => setLastName(text)}
         />
         {lastNameError !== "" && (
-          <Text style={{ color: "red" }}>{lastNameError}</Text>
+          <Text color = "red">{lastNameError}</Text>
         )}
 
         <TextInput
@@ -203,10 +166,9 @@ export default function App() {
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          // style={{borderWidth: 1, borderColor: 'black'}}
         />
         {emailError !== "" && (
-          <Text style={{ color: "red" }}>{emailError}</Text>
+          <Text color = "red">{emailError}</Text>
         )}
 
         <TextInput
@@ -217,7 +179,7 @@ export default function App() {
           onChangeText={(text) => setPassword(text)}
         />
         {passwordError !== "" && (
-          <Text style={{ color: "red" }}>{passwordError}</Text>
+          <Text color = "red">{passwordError}</Text>
         )}
 
         <TextInput
@@ -225,113 +187,27 @@ export default function App() {
           placeholder="Enter birthdate (MM/DD/YYYY)"
           value={birthdate}
           onChangeText={(text) => setBirthday(text)}
-          keyboardType="default"
-          maxLength={10}
+          // keyboardType="default"
+          // maxLength={10}
         />
         {birthDateError !== "" && (
-          <Text style={{ color: "red" }}>{birthDateError}</Text>
+          <Text color = "red">{birthDateError}</Text>
         )}
 
-        {/* <Button
-          title="Upload"
-          onPress={() => {
-            ImagePicker.showImagePicker({}, response => {
-              if (response.didCancel) {
-                console.log("User cancelled image picker");
-              } else if (response.error) {
-                console.log("ImagePicker Error: ", response.error);
-              } else if (response.customButton) {
-                console.log("User tapped custom button: ", response.customButton);
-              } else {
-                const source = { uri: response.uri };
-                setImage(source);
-              }
-            });
-          }}
-        >
-          Select an Image
+        <Button round size="small" color="#4169E1" onPress={handleSubmit}>
+          Submit
         </Button>
 
-        {image && <Image source={image} style={styles.image}/>} */}
-      </View>
-
-      <TouchableOpacity onPress={() => setIsHidden(!isHidden)}>
-        <Text style={styles.btnAddress}>
-          {isHidden ? "Address (+)" : "Address (-)"}
+        <Button round size="small" color="#808080" onPress={handleClear}>
+          Clear
+        </Button>
+        
+        <Text>
+          Go back to
+          <TouchableOpacity onPress={handleLogin}>
+            <Text color="#4169E1"> Login</Text>
+          </TouchableOpacity>
         </Text>
-      </TouchableOpacity>
-      {!isHidden && (
-        <View style={styles.addressContainer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Street"
-            value={street}
-            onChangeText={(text) => setStreet(text)}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="City"
-            value={city}
-            onChangeText={(text) => setCity(text)}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Province"
-            value={province}
-            onChangeText={(text) => setProvince(text)}
-          />
-          <TextInput
-            style={styles.textInput}
-            placeholder="Postal code"
-            value={postalCode}
-            onChangeText={(text) => setPostalCode(text)}
-            keyboardType="numeric"
-            maxLength={7}
-          />
-        </View>
-      )}
-
-      <View style={styles.btnContainer}>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={{
-            backgroundColor: "#4681f4",
-            padding: 10,
-            alignItems: "center",
-            borderRadius: 5,
-            marginBottom: 5,
-          }}
-        >
-          <Text style={{ color: "white" }}>Submit</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={handleClear}
-          style={{
-            backgroundColor: "#708090",
-            padding: 10,
-            alignItems: "center",
-            borderRadius: 5,
-            marginBottom: 5,
-          }}
-        >
-          <Text style={{ color: "white" }}>Clear</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleClear}
-          style={{
-            backgroundColor: "#FF6347",
-            padding: 10,
-            alignItems: "center",
-            borderRadius: 5,
-            marginBottom: 5,
-          }}
-        >
-          <Text style={{ color: "white" }}>Cancel</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleLogin}>
-          <Text>Login</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );
