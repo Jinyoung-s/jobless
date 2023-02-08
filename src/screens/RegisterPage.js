@@ -1,4 +1,4 @@
-import ImagePicker from "react-native-image-picker";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Text } from "galio-framework";
 import React, { useState } from "react";
 import {
@@ -55,6 +55,19 @@ export default function App() {
     } else {
       setBirthDateError("");
     }
+
+    const auth = getAuth();
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+        });
   };
 
   // Clear Text Input
@@ -208,6 +221,7 @@ export default function App() {
             <Text color="#4169E1"> Login</Text>
           </TouchableOpacity>
         </Text>
+        
       </View>
     </ScrollView>
   );
