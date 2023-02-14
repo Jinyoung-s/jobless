@@ -8,7 +8,6 @@ import { Text, Button } from "galio-framework";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const navigation = useNavigation();
 
   useEffect(() => {

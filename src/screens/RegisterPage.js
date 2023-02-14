@@ -1,3 +1,5 @@
+import { db } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore"; 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Text } from "galio-framework";
 import React, { useState } from "react";
@@ -61,6 +63,7 @@ export default function App() {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
+          addUserData();
           // ...
         })
         .catch((error) => {
@@ -69,6 +72,22 @@ export default function App() {
           // ..
         });
   };
+
+
+  const addUserData = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        birthdate: birthdate
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
 
   // Clear Text Input
 
