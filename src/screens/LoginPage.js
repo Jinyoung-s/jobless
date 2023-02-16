@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   const handleRegister = () => {
-    navigation.navigate("RegisterPage");
+    navigation.navigate("Register");
   };
 
   return (
