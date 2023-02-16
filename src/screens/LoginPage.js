@@ -13,7 +13,7 @@ const Login = () => {
   useEffect(() => {
     const unscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("Home");
+        navigation.navigate("Main");
       }
     });
 
@@ -56,9 +56,11 @@ const Login = () => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <Button round color="#4169E1" title="Login" onPress={handleLogin}>Login</Button>
+      <Button round color="#4169E1" title="Login" onPress={handleLogin}>
+        Login
+      </Button>
       <Text>
-        Don't have an account yet? 
+        Don't have an account yet?
         <TouchableOpacity onPress={handleRegister}>
           <Text color="#4169E1"> Register</Text>
         </TouchableOpacity>

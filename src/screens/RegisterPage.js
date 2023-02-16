@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function App() {
+function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -247,3 +247,5 @@ export default function App() {
     </ScrollView>
   );
 }
+
+export default App;
