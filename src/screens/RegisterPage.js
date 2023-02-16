@@ -1,5 +1,5 @@
 import { db } from "../../firebaseConfig";
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, updateDoc  } from "firebase/firestore"; 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Text } from "galio-framework";
 import React, { useState } from "react";
@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function App() {
+function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,21 +73,23 @@ export default function App() {
         });
   };
 
-
+  
   const addUserData = async () => {
     try {
+      const auth = getAuth();
+      const user = auth.currentUser;
       const docRef = await addDoc(collection(db, "users"), {
+        uid: user.uid,
         firstName: firstName,
         lastName: lastName,
         email: email,
-        birthdate: birthdate
+        birthdate: birthdate,        
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
-
 
   // Clear Text Input
 
@@ -245,3 +247,5 @@ export default function App() {
     </ScrollView>
   );
 }
+
+export default App;

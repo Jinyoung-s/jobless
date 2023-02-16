@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { auth } from "../../firebaseConfig";
 
-export default function App({ navigation }) {
+function App({navigation}) { 
   const handleLogout = () => {
     auth
       .signOut()
@@ -25,3 +25,6 @@ export default function App({ navigation }) {
     </View>
   );
 }
+
+
+export default App;
