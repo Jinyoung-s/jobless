@@ -16,12 +16,6 @@ function App({navigation}) {
   };
   return (
     <View>
-      <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-        <Text>Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Sign Out</Text>
-      </TouchableOpacity>
     </View>
   );
 }

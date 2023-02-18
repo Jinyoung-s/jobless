@@ -153,13 +153,13 @@ function App() {
       borderWidth: 1,
       padding: 10,
       margin: 10,
+      borderRadius: 10,
     },
   });
 
   // Return Content
 
   return (
-    <ScrollView>
       <View style={styles.container}>
         <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
           Sign Up Now
@@ -222,7 +222,7 @@ function App() {
           value={birthdate}
           onChangeText={(text) => setBirthday(text)}
           // keyboardType="default"
-          // maxLength={10}
+          maxLength={10}
         />
         {birthDateError !== "" && (
           <Text color = "red">{birthDateError}</Text>
@@ -241,10 +241,8 @@ function App() {
           <TouchableOpacity onPress={handleLogin}>
             <Text color="#4169E1"> Login</Text>
           </TouchableOpacity>
-        </Text>
-        
+        </Text>       
       </View>
-    </ScrollView>
   );
 }
 
