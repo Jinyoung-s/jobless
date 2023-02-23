@@ -1,7 +1,7 @@
 /**
  * home page
  * 2/13/2023 created - jys
- * 2/23/2023 modified - jys
+ * 2/23/2023 modified - jys.
  */
 import {
   Text,
