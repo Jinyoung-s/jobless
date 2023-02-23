@@ -109,9 +109,6 @@ function App ({navigation}) {
                       }
 
 
-
-
-
                     // const cred = EmailAuthProvider.credential(user.email, user.password);
                     // reauthenticateWithCredential(auth.currentUser, cred)
                     //     .then(() => {

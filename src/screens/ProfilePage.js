@@ -67,7 +67,6 @@ function App ({navigation}) {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "white",
     },
     containerCamera: {
       flex: 1,

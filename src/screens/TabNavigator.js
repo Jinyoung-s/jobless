@@ -32,7 +32,7 @@ function TabNavigator() {
         tabBarInactiveTintColor: "#000000",
       })}
     >
-      <Tab.Screen options={{ headerShown: false }} name="Home" component={HomePage} />
+      <Tab.Screen name="Home" component={HomePage} />
       <Tab.Screen name="Post" component={PostPage} />
       <Tab.Screen name="Chats" component={ChatsPage} />
       <Tab.Screen name="Profile" component={ProfilePage} />
