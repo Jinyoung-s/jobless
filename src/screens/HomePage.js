@@ -1,7 +1,7 @@
 /**
  * home page
  * 2/13/2023 created - jys
- * 2/23/2023 modified - jys
+ * 2/23/2023 modified - jys.
  */
 import {
   Text,
@@ -83,7 +83,7 @@ function App({ navigation }) {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.contents}>{item.description}</Text>
         <View style={styles.bottomRow}>
-          <Text style={styles.price}>{item.price} </Text>
+          <Text style={styles.price}>{item.price} CAD</Text>
           <Button style={styles.categoryButton}>{item.category}</Button>
         </View>
       </View>
