@@ -83,7 +83,7 @@ function App({ navigation }) {
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.contents}>{item.description}</Text>
         <View style={styles.bottomRow}>
-          <Text style={styles.price}>{item.price} </Text>
+          <Text style={styles.price}>{item.price} CAD</Text>
           <Button style={styles.categoryButton}>{item.category}</Button>
         </View>
       </View>
