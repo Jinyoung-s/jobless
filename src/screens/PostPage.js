@@ -1,3 +1,8 @@
+/**
+ * the page for creating a post
+ * 2/13/2023 created - jys
+ * 2/23/2023 modified - jys
+ */
 import React, { useState } from "react";
 import {
   View,
@@ -7,13 +12,17 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storage } from "../../firebaseConfig";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { saveData } from "../Api/FirebaseDb";
 
 const CreatePost = () => {
   const [image, setImage] = useState(null);
+  const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -26,40 +35,35 @@ const CreatePost = () => {
     }
   };
 
-  const handleUploadImage = () => {
-    const storageRef = storage.ref(`images/${image.fileName}`);
-    const uploadTask = storageRef.putFile(image.path);
+  const handleCreatePost = async () => {
+    let today = new Date();
 
-    uploadTask.on(
-      firebase.storage.TaskEvent.STATE_CHANGED,
-      (snapshot) => {
-        console.log(snapshot.bytesTransferred / snapshot.totalBytes);
-      },
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          const postData = {
-            image: downloadURL,
-            description,
-            price,
-            category,
-          };
-          firebase
-            .database()
-            .ref("posts/")
-            .push(postData)
-            .then(() => {
-              Alert.alert("Success", "Post created successfully");
-            });
-        });
-      }
-    );
+    const storageRef = ref(storage, `images/IMG${today.getTime()}`);
+    //const uploadTask = uploadBytes(storageRef, image.path);
+    //storageRef.putFile(image.path);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, image.uri);
+      console.log("Image uploaded successfully");
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      const postData = {
+        title: title,
+        image: image.uri,
+        description,
+        price,
+        category,
+        created: new Date(),
+      };
+
+      saveData("post", postData);
+    } catch (error) {
+      console.log("Error uploading image: ", error);
+    }
   };
 
   return (
-    <View>
+    <ScrollView style={styles.backgroundWhite}>
       <View>
         <TouchableOpacity
           style={styles.chooseImageButton}
@@ -77,10 +81,10 @@ const CreatePost = () => {
       </View>
       <View style={styles.container}>
         <TextInput
-          style={styles.input}
+          style={styles.input_title}
           placeholder="Title"
-          onChangeText={(text) => setPrice(text)}
-          value={price}
+          onChangeText={(text) => setTitle(text)}
+          value={title}
         />
         <View style={styles.inputContainer}>
           <TextInput
@@ -104,12 +108,12 @@ const CreatePost = () => {
         />
         <TouchableOpacity
           style={styles.createPostButton}
-          onPress={handleUploadImage}
+          onPress={handleCreatePost}
         >
           <Text style={styles.createPostButtonText}>Create Post</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -158,6 +162,15 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "white",
   },
+  input_title: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    width: 300,
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: "white",
+  },
   input_width100: {
     height: 40,
     borderColor: "gray",
@@ -186,6 +199,9 @@ const styles = StyleSheet.create({
   createPostButtonText: {
     fontSize: 16,
     color: "white",
+  },
+  backgroundWhite: {
+    backgroundColor: "white",
   },
 });
 
