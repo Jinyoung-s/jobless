@@ -1,16 +1,14 @@
 import 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Button, Text } from "galio-framework";
 import { db, auth } from "../../firebaseConfig";
 import { doc, getDocs, collection, query, where } from "firebase/firestore"; 
-import { MaterialIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
+import defaultImage from '../assets/default-image.png'
 
 function App ({navigation}) {
   const [user, setUser] = useState("");
-  const [image, setImage] = useState(null);
 
   const getUserData = async () => {
     try {
@@ -54,27 +52,13 @@ function App ({navigation}) {
     return () => unsubscribe();
   }, []);
 
-  const handleChooseImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync();
-
-    if (!result.canceled) {
-      setImage(result);
-    }
-  };
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
     },
-    containerCamera: {
-      flex: 1,
-      backgroundColor: "gray",
-      borderRadius: 10,
-      padding: 20,
-      width: 70,
-    },
+    
     editProf: {
       position: "absolute",
       bottom: 80,
@@ -83,15 +67,22 @@ function App ({navigation}) {
       position: "absolute",
       bottom: 20,
     },
+    profilePicture: {
+      width: 200,
+      height: 200,
+      borderRadius: 10,
+      marginBottom: 100,
+      marginTop: -200,
+      borderColor: 'black',
+      borderWidth: 1,
+      overflow: 'hidden',
+    },
   });
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity style={styles.chooseImageButton} onPress={handleChooseImage}>
-          <View style={styles.containerCamera}>
-            <MaterialIcons name="camera-alt" size={30} color="black" />
-          </View>
-        </TouchableOpacity>
+
+      <Image source={defaultImage} style={styles.profilePicture} />  
       
       <Text size={30}>{user.firstName} {user.lastName}</Text>
       <Text size={30}><Ionicons name="ios-mail" size={30} color="black"/> {user.email}</Text>

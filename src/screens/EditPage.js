@@ -3,6 +3,9 @@ import { Button, Text } from "galio-framework";
 import { getAuth, updateEmail, updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { doc, getDocs, collection, query, where, updateDoc } from "firebase/firestore"; 
 import { db, auth, app  } from "../../firebaseConfig";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import defaultImage from '../assets/default-image.png'
 
 import {
     View,
@@ -10,6 +13,7 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
+    Image
   } from "react-native";
 
 function App ({navigation}) {
@@ -24,6 +28,7 @@ function App ({navigation}) {
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [birthDateError, setBirthDateError] = useState("");    
+    const [image, setImage] = useState(null);
 
 
     const handleUpdate = () => {
@@ -134,6 +139,14 @@ function App ({navigation}) {
         
     };
 
+    const handleChooseImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync();
+  
+      if (!result.canceled) {
+        setImage(result);
+      }
+    };
+
   // Clear Text Input
 
   const handleClear = () => {
@@ -194,6 +207,32 @@ function App ({navigation}) {
       padding: 10,
       margin: 10,
     },
+    profilePicture: {
+      width: 200,
+      height: 200,
+      borderRadius: 10,
+      marginBottom: 80,
+      marginTop: 50,
+      // borderColor: 'black',
+      // borderWidth: 1,
+      // overflow: 'hidden',
+    },
+    containerCamera: {
+      // flex: 1,
+      // backgroundColor: "gray",
+      // borderRadius: 10,
+      // padding: 20,
+      // width: 70,
+
+      position: 'absolute',
+      bottom: 85,
+      left: 45,
+      backgroundColor: '#D3D3D3',
+      padding: 10,
+      borderRadius: 20,
+      borderColor: 'black',
+      borderWidth: 1,
+    },
   });
 
   // Return Content
@@ -214,6 +253,15 @@ function App ({navigation}) {
         >
           You know what to do...
         </Text>
+
+        <Image source={defaultImage} style={styles.profilePicture} />  
+
+        <TouchableOpacity style={styles.chooseImageButton} onPress={handleChooseImage}>
+          <View style={styles.containerCamera}>
+            <MaterialIcons name="camera-alt" size={30} color="black" />
+          </View>
+        </TouchableOpacity>
+
 
         <TextInput
           style={styles.textInput}

@@ -24,7 +24,7 @@ function TabNavigator() {
               ? "chatbubble-ellipses-sharp"
               : "chatbubble-ellipses-outline";
           } else if (route.name === "Profile") {
-            iconName = focused ? "settings" : "settings-outline";
+            iconName = focused ? "person" : "person-outline";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },

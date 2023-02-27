@@ -20,7 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData } from "../Api/FirebaseDb";
 
-const CreatePost = () => {
+function App ({navigation}) {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -205,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePost;
+export default App;
