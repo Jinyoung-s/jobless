@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Text } from "galio-framework";
-import { getAuth, updateEmail, updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { doc, getDocs, collection, query, where, updateDoc } from "firebase/firestore"; 
 import { db, auth, app  } from "../../firebaseConfig";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import defaultImage from '../assets/default-image.png'
 
 import {
     View,
@@ -10,20 +12,24 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
+    Image,
+    Modal 
   } from "react-native";
 
-function App ({navigation}) {
+function App () {
  
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [birthdate, setBirthday] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
-    const [emailError, setEmailError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
     const [birthDateError, setBirthDateError] = useState("");    
+    const [passwordError, setPasswordError] = useState("");
+    const [image, setImage] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
 
     const handleUpdate = () => {
@@ -39,28 +45,23 @@ function App ({navigation}) {
       setLastNameError("");
     }
 
-    if (!validateEmail(email)) {
-      setEmailError("Invalid email");
-    } else {
-      setEmailError("");
-    }
-
-    // if (!validatePassword(password)) {
-    //   setPasswordError(
-    //     "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
-    //   );
-    // } else {
-    //   setPasswordError("");
-    // }
-
     if (!validateBirthDate(birthdate)) {
       setBirthDateError('Invalid Date! Must be in the format "MM/DD/YYYY"');
     } else {
       setBirthDateError("");
     }
 
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
+      );
+    } else {
+      setPasswordError("");
+    }
+
     updateUserData();
   };
+
   
   const updateUserData = async () => {
 
@@ -73,7 +74,7 @@ function App ({navigation}) {
         if (userDocs.empty) {
         console.log("No matching documents.");
         } else {
-        // Get the document id of the first (and only) matching document
+        // Get the document id of the first (and only) matching documents
         const docId = userDocs.docs[0].id;
         console.log("Document id:", docId);  
 
@@ -87,49 +88,8 @@ function App ({navigation}) {
                         firstName: firstName,
                         lastName: lastName,
                         birthdate: birthdate,
-                        email: email, 
                     })
-                    const newEmail = email;
-                    console.log(newEmail);
-                    // Create a credential with the user's current email and password
-                    const userAuth = auth.currentUser;
-
-                    if (userAuth) {
-                        const { emailAuth, passwordAuth } = userAuth;
-                        const cred = EmailAuthProvider.credential(emailAuth, passwordAuth);
-                        reauthenticateWithCredential(userAuth, cred)
-                          .then(() => {
-                            user.updateEmail(newEmail)
-                              .then(() => console.log('Email updated successfully'))
-                              .catch((error) => console.error('Error updating email:', error));
-                          })
-                          .catch((error) => console.error('Error re-authenticating user:', error));
-                      } else {
-                        console.error('User is not signed in');
-                      }
-
-
-
-
-
-                    // const cred = EmailAuthProvider.credential(user.email, user.password);
-                    // reauthenticateWithCredential(auth.currentUser, cred)
-                    //     .then(() => {
-                    //         updateEmail(auth.currentUser, newEmail).then(() => {
-                    //             console.log(auth.currentUser);
-                    //         }).catch((error) => {
-                    //             console.log(error);
-                    //         // ...
-                    //         });
-                    //     })
-                    //     .catch((error) => {
-                    //         console.error('Error re-authenticating user:', error);
-                    //     });    
-
-                    // console.log(auth.currentUser);
-                    // console.log('Document updated successfully');
-                };
-            
+                };     
             } catch (e) {
             console.error('Error updating document: ', e);
             }
@@ -137,19 +97,40 @@ function App ({navigation}) {
         
     };
 
+  const handleChooseImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync();
+
+    if (!result.canceled) {
+      setImage(result);
+    }
+  };
+
+  
   // Clear Text Input
 
   const handleClear = () => {
     setFirstName("");
     setLastName("");
     setBirthday("");
-    setEmail("");
     setPassword("");
     setFirstNameError("");
     setLastNameError("");
     setPasswordError("");
-    setEmailError("");
     setBirthDateError("");
+  };
+
+  const showDialog = () => {
+    setIsModalVisible(true);
+  };
+
+  const handlePasswordUpdate = () => {
+    // Perform update action
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    // Perform cancel action
+    setIsModalVisible(false);
   };
 
   // Regex Expression
@@ -197,6 +178,23 @@ function App ({navigation}) {
       padding: 10,
       margin: 10,
     },
+    profilePicture: {
+      width: 200,
+      height: 200,
+      borderRadius: 10,
+      marginBottom: 80,
+      marginTop: 50,
+    },
+    containerCamera: {
+      position: 'absolute',
+      bottom: 85,
+      left: 45,
+      backgroundColor: '#D3D3D3',
+      padding: 10,
+      borderRadius: 20,
+      borderColor: 'black',
+      borderWidth: 1,
+    },
   });
 
   // Return Content
@@ -217,6 +215,46 @@ function App ({navigation}) {
         >
           You know what to do...
         </Text>
+
+        <Image source={defaultImage} style={styles.profilePicture} />  
+
+        <TouchableOpacity style={styles.chooseImageButton} onPress={handleChooseImage}>
+          <View style={styles.containerCamera}>
+            <MaterialIcons name="camera-alt" size={30} color="black" />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={showDialog}>
+          <Text color="#4B0082"
+                style={{
+                  fontSize: 15,
+                  marginBottom: 20,
+                }}>Change Password</Text>           
+        </TouchableOpacity>
+
+        <Modal visible={isModalVisible} animationType="slide">
+          <View style={styles.container}>
+            <Text style={{ fontSize: 20 }}>Reset Password</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="New Password"
+              secureTextEntry={true}
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Confirm New Password"
+              secureTextEntry={true}
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+            />
+            <View style={{ flexDirection: 'row', marginTop: 20 }}>
+              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePasswordUpdate}>Save</Button> 
+              <Button style={{ backgroundColor: "#808080"}} round size="small" onPress={handleCancel}>Cancel</Button>
+            </View>
+          </View>
+        </Modal>
 
         <TextInput
           style={styles.textInput}
@@ -240,45 +278,22 @@ function App ({navigation}) {
 
         <TextInput
           style={styles.textInput}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        {emailError !== "" && (
-          <Text color = "red">{emailError}</Text>
-        )}
-
-        {/* <TextInput
-          style={styles.textInput}
-          secureTextEntry={true}
-          placeholder="Enter password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-        {passwordError !== "" && (
-          <Text color = "red">{passwordError}</Text>
-        )} */}
-
-        <TextInput
-          style={styles.textInput}
           placeholder="Enter birthdate (MM/DD/YYYY)"
           value={birthdate}
           onChangeText={(text) => setBirthday(text)}
-          // keyboardType="default"
           maxLength={10}
         />
         {birthDateError !== "" && (
           <Text color = "red">{birthDateError}</Text>
         )}
 
-        <Button round size="small" color="#4169E1" onPress={handleUpdate}>
+        <Button round size="small" color="#0000FF" onPress={handleUpdate}>
           Update
         </Button>
 
         <Button round size="small" color="#808080" onPress={handleClear}>
           Clear
         </Button>
-
       </View>
     </ScrollView>
   );

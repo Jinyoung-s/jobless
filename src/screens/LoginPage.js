@@ -36,6 +36,10 @@ const Login = () => {
     navigation.navigate("Register");
   };
 
+  const handleReset = () => {
+    navigation.navigate("Reset");
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -59,6 +63,12 @@ const Login = () => {
       <Button round color="#4169E1" title="Login" onPress={handleLogin}>
         Login
       </Button>
+      <Text>
+        Forgot Password?
+        <TouchableOpacity onPress={handleReset}>
+          <Text color="#4169E1"> Reset</Text>
+        </TouchableOpacity>
+      </Text>
       <Text>
         Don't have an account yet?
         <TouchableOpacity onPress={handleRegister}>
