@@ -5,6 +5,7 @@ import MainPage from "./src/screens/MainPage";
 import RegisterPage from "./src/screens/RegisterPage";
 import ProfilePage from "./src/screens/ProfilePage";
 import EditPage from "./src/screens/EditPage";
+import PostDetails from "./src/screens/PostDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,10 +18,15 @@ function App() {
           name="Login"
           component={LoginPage}
         />
-        <Stack.Screen options={{ headerShown: false }} name="Main" component={MainPage} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Main"
+          component={MainPage}
+        />
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Profile" component={ProfilePage} />
         <Stack.Screen name="Edit" component={EditPage} />
+        <Stack.Screen name="Details" component={PostDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

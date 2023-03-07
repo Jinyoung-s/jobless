@@ -39,9 +39,13 @@ function App({ navigation }) {
       });
   };
 
+  const openDetails = (postingId) => {
+    navigation.navigate("Details", { postId: postingId });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      let snapshot = await getCollectionByOrder("post", "title", 20);
+      let snapshot = await getCollectionByOrder("post", "created", 20);
       console.log(snapshot);
       const itemsData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -79,9 +83,12 @@ function App({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Image source={{ uri: item.image }} style={styles.image} />
+
       <View style={styles.itemDetails}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.contents}>{item.description}</Text>
+        <TouchableOpacity onPress={() => openDetails(item.id)}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.contents}>{item.description}</Text>
+        </TouchableOpacity>
         <View style={styles.bottomRow}>
           <Text style={styles.price}>{item.price} CAD</Text>
           <Button style={styles.categoryButton}>{item.category}</Button>

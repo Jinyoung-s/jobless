@@ -61,7 +61,7 @@ const getCollectionByOrder = async (
   if (whereFnc == null) {
     q = query(
       collection(db, collectionName),
-      orderBy(orderby),
+      orderBy(orderby, "desc"),
       limit(limitNum)
     );
   } else {
@@ -87,4 +87,25 @@ const getCollectionByQuery = async (queryFnc: any) => {
   return querySnapshot;
 };
 
-export { saveData, getCollection, getCollectionByOrder, getCollectionByQuery };
+const getDocById = async (collectionName: string, id: string) => {
+  console.log("!!!!!!!!!!!!" + id);
+  const ref = doc(db, collectionName, id);
+  const docSnap = await getDoc(ref);
+  let returnObj = {};
+
+  if (docSnap.exists()) {
+    returnObj = docSnap.data();
+    console.log(returnObj);
+  } else {
+    console.log("No such document!");
+  }
+  return returnObj;
+};
+
+export {
+  saveData,
+  getCollection,
+  getCollectionByOrder,
+  getCollectionByQuery,
+  getDocById,
+};
