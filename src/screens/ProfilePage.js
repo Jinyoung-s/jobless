@@ -77,6 +77,10 @@ function App ({navigation}) {
       borderWidth: 1,
       overflow: 'hidden',
     },
+    text: {
+      width: 300,
+      flexWrap: "wrap",
+    },
   });
 
   return (
@@ -85,8 +89,8 @@ function App ({navigation}) {
       <Image source={defaultImage} style={styles.profilePicture} />  
       
       <Text size={30}>{user.firstName} {user.lastName}</Text>
-      <Text size={30}><Ionicons name="ios-mail" size={30} color="black"/> {user.email}</Text>
-      <Text size={30}><Ionicons name="egg" size={30} color="black"/> {user.birthdate}</Text>
+      <Text size={20} style={styles.text}><Ionicons name="ios-mail" size={20} color="black"/> {user.email}</Text>
+      <Text size={20}><Ionicons name="egg" size={20} color="black"/> {user.birthdate}</Text>
       
       {/* Add any other relevant data */}
       <Button style={styles.editProf} round size="small" color="#0000FF" onPress={editProfile}>
