@@ -116,11 +116,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   saveButton: {
-    backgroundColor: "#66BB6A",
+    backgroundColor: "#0000FF",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 4,
     marginRight: 8,
+    borderRadius:25,
   },
   cancelButton: {
     backgroundColor: "#EF5350",
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "white",
     padding: 16,
   },
   input: {

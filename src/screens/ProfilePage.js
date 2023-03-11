@@ -57,6 +57,7 @@ function App ({navigation}) {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor:"white"
     },
     
     editProf: {
@@ -77,11 +78,8 @@ function App ({navigation}) {
       borderWidth: 1,
       overflow: 'hidden',
     },
-    text: {
-      width: 300,
-      flexWrap: "wrap",
-    },
   });
+
 
   return (
     <View style={styles.container}>

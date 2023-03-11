@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Image
 } from "react-native";
 
 function App() {
@@ -145,6 +146,7 @@ function App() {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor:"white"
     },
     textInput: {
       height: 40,
@@ -153,27 +155,47 @@ function App() {
       borderWidth: 1,
       padding: 10,
       margin: 10,
-      borderRadius: 10,
+      borderRadius: 20,
     },
+    image:{
+      height:150,
+      width:150,
+      borderColor: 'transparent',
+      borderRadius: 5,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 5,
+      elevation: 5,
+      
+    },
+
+    button:{
+      borderColor: 'transparent',
+      borderRadius: 50,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 5,
+      elevation: 5,
+  },
   });
 
   // Return Content
 
   return (
       <View style={styles.container}>
+        <Image style={styles.image} source={require("../assets/Official-Jobless-logo-updated.png")}/>
         <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
           Sign Up Now
         </Text>
-        <Text
-          style={{
-            fontSize: 10,
-            fontWeight: "bold",
-            fontStyle: "italic",
-            marginBottom: 5,
-          }}
-        >
-          You know what to do...
-        </Text>
+       
 
         <TextInput
           style={styles.textInput}
@@ -228,11 +250,11 @@ function App() {
           <Text color = "red">{birthDateError}</Text>
         )}
 
-        <Button round size="small" color="#4169E1" onPress={handleSubmit}>
+        <Button round style={styles.button} size="small" color="#0000FF" onPress={handleSubmit}>
           Submit
         </Button>
 
-        <Button round size="small" color="#808080" onPress={handleClear}>
+        <Button round style={styles.button} size="small" color="#FF4500" onPress={handleClear}>
           Clear
         </Button>
         

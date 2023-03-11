@@ -169,6 +169,7 @@ function App () {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor:"white"
     },
     textInput: {
       height: 40,
@@ -177,6 +178,7 @@ function App () {
       borderWidth: 1,
       padding: 10,
       margin: 10,
+      borderRadius:20
     },
     profilePicture: {
       width: 200,
@@ -184,8 +186,17 @@ function App () {
       borderRadius: 10,
       marginBottom: 80,
       marginTop: 50,
+      // borderColor: 'black',
+      // borderWidth: 1,
+      // overflow: 'hidden',
     },
     containerCamera: {
+      // flex: 1,
+      // backgroundColor: "gray",
+      // borderRadius: 10,
+      // padding: 20,
+      // width: 70,
+
       position: 'absolute',
       bottom: 85,
       left: 45,
@@ -197,10 +208,11 @@ function App () {
     },
   });
 
+
   // Return Content
 
   return (
-    <ScrollView>
+
       <View style={styles.container}>
         <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
           Update your profile
@@ -291,11 +303,11 @@ function App () {
           Update
         </Button>
 
-        <Button round size="small" color="#808080" onPress={handleClear}>
+        <Button round size="small" color="#FF4500" onPress={handleClear}>
           Clear
         </Button>
       </View>
-    </ScrollView>
+   
   );
 };
 
