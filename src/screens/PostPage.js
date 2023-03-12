@@ -19,6 +19,7 @@ import { storage } from "../../firebaseConfig";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData } from "../Api/FirebaseDb";
+import defaultImage from '../assets/post-add-icon.png';
 
 function App ({navigation}) {
   const [image, setImage] = useState(null);
@@ -65,6 +66,12 @@ function App ({navigation}) {
   return (
     <ScrollView style={styles.backgroundWhite}>
       <View>
+      <Image source={defaultImage} style={styles.addpostPicture} /> 
+      <View style={styles.containerImage}>
+          {image && (
+            <Image source={{ uri: image.uri }} style={styles.previewImage} />
+          )}
+        </View>
         <TouchableOpacity
           style={styles.chooseImageButton}
           onPress={handleChooseImage}
@@ -73,11 +80,6 @@ function App ({navigation}) {
             <MaterialIcons name="camera-alt" size={30} color="black" />
           </View>
         </TouchableOpacity>
-        <View style={styles.containerImage}>
-          {image && (
-            <Image source={{ uri: image.uri }} style={styles.previewImage} />
-          )}
-        </View>
       </View>
       <View style={styles.container}>
         <TextInput
@@ -124,12 +126,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerCa: {
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    width: 70,
-    marginLeft: 30,
+   
+    position: "absolute",
+    bottom: 85,
+    left: 45,
+    backgroundColor: '#D3D3D3',
+    padding: 10,
+    borderRadius: 20,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   containerImage: {
     flex: 1,
@@ -140,18 +145,34 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   chooseImageButton: {
+  
     backgroundColor: "#white",
     padding: 10,
     borderRadius: 5,
+    left:180
   },
   chooseImageButtonText: {
     fontSize: 16,
     color: "white",
   },
   previewImage: {
-    width: 300,
-    height: 300,
-    marginTop: 10,
+    position:"absolute",
+    width: 200,
+    height: 200,
+    bottom:60,
+   
+      
+      
+
+  },
+  addpostPicture: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+    marginBottom: 80,
+    marginTop: 50,
+    left:100
+   
   },
   input: {
     height: 100,
@@ -161,6 +182,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
+    borderRadius:20
   },
   input_title: {
     height: 40,
@@ -170,6 +192,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
+    borderRadius:20
   },
   input_width100: {
     height: 40,
@@ -180,6 +203,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "white",
     alignItems: "left",
+    borderRadius:20
   },
   description: {
     height: 150,
@@ -189,11 +213,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
+    borderRadius:20
   },
   createPostButton: {
-    backgroundColor: "#FFC107",
+    backgroundColor: "#0000FF",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 10,
   },
   createPostButtonText: {

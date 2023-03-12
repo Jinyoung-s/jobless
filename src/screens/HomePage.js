@@ -1,7 +1,8 @@
 /**
  * home page
  * 2/13/2023 created - jys
- * 2/23/2023 modified - jys.
+ * 2/23/2023 modified - jys..
+ * 
  */
 import {
   Text,
@@ -19,7 +20,7 @@ import {
 } from "../Api/FirebaseDb";
 import React, { useState, useEffect } from "react";
 import { db, collection } from "../../firebaseConfig";
-import { Button } from "galio-framework";
+import { Button, Card } from "galio-framework";
 import { query, orderBy, startAfter, limit } from "firebase/firestore";
 
 function App({ navigation }) {
@@ -81,20 +82,26 @@ function App({ navigation }) {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.item}>
-      <Image source={{ uri: item.image }} style={styles.image} />
-
-      <View style={styles.itemDetails}>
-        <TouchableOpacity onPress={() => openDetails(item.id)}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.contents}>{item.description}</Text>
-        </TouchableOpacity>
-        <View style={styles.bottomRow}>
-          <Text style={styles.price}>{item.price} CAD</Text>
-          <Button style={styles.categoryButton}>{item.category}</Button>
-        </View>
-      </View>
-    </View>
+    
+     <TouchableOpacity onPress={() => openDetails(item.id)}>
+      
+      <Card 
+    flex
+    borderless
+    shadow
+    style={styles.card}
+    title= {item.title}
+    caption={item.description}
+    avatar={item.image}
+    image={item.image}
+    location
+    
+    
+    
+    
+   
+  />
+ </TouchableOpacity>
   );
 
   return (
@@ -112,18 +119,33 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor:"white"
+  },
+  card:{
+    marginBottom:20,
+    backgroundColor:"white"
+    
   },
   item: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     borderRadius: 4,
     marginBottom: 16,
-    elevation: 4,
+    elevation: 10,
+    borderBottomWidth: 2,
+    
+    
   },
   image: {
     width: 80,
     height: 80,
     borderRadius: 4,
+    left:5,
+    
+    
+    
+    
+    
   },
   itemDetails: {
     flex: 1,
@@ -149,9 +171,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   categoryButton: {
-    backgroundColor: "#fe5f55",
+    backgroundColor: "#4169E1",
     borderRadius: 50,
     paddingHorizontal: 16,
+    
+
   },
 });
 

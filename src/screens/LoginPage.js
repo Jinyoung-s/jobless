@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
-import { Text, Button } from "galio-framework";
+import { Text, Button, Block, Input } from "galio-framework";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -41,7 +41,9 @@ const Login = () => {
   };
 
   return (
+    <Block flex>       
     <View style={styles.container}>
+    <Image style={styles.image} source={require("../assets/Official-Jobless-logo-updated.png")}/>
       <TextInput
         style={styles.input}
         value={email}
@@ -51,16 +53,14 @@ const Login = () => {
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <TextInput
-        style={styles.input}
+      <Input password viewPass style={styles.passwordinput}
         value={password}
         onChangeText={(text) => setPassword(text)}
         placeholder="Password"
-        secureTextEntry={true}
         autoCapitalize="none"
         autoCorrect={false}
       />
-      <Button round color="#4169E1" title="Login" onPress={handleLogin}>
+      <Button style={styles.loginButton} round color="#4169E1" title="Login" onPress={handleLogin}>
         Login
       </Button>
       <Text>
@@ -76,6 +76,7 @@ const Login = () => {
         </TouchableOpacity>
       </Text>
     </View>
+    </Block>
   );
 };
 
@@ -84,13 +85,57 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor:"white"
   },
+  image:{
+   
+    height:200,
+    width:200,
+    borderColor: 'transparent',
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+
+  
+},
   input: {
-    width: "80%",
+    width: 250,
+    height: 50,
+    borderRadius:25,
     padding: 10,
     marginBottom: 10,
     borderColor: "gray",
     borderWidth: 1,
+  },
+  passwordinput:{
+    width:250,
+    height:50,
+    borderRadius:25
+  },
+  loginButton:{
+    backgroundColor: "#0000FF",
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 10,
+    borderColor: 'transparent',
+      borderRadius: 50,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.8,
+      shadowRadius: 5,
+      elevation: 5,
+   
+    borderWidth: 1,
+    borderRadius: 20
   },
 });
 
