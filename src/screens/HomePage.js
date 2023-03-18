@@ -2,7 +2,7 @@
  * home page
  * 2/13/2023 created - jys
  * 2/23/2023 modified - jys..
- * 
+ *
  */
 import {
   Text,
@@ -18,10 +18,11 @@ import {
   getCollectionByOrder,
   getCollectionByQuery,
 } from "../Api/FirebaseDb";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { db, collection } from "../../firebaseConfig";
 import { Button, Card } from "galio-framework";
 import { query, orderBy, startAfter, limit } from "firebase/firestore";
+import { useFocusEffect } from "@react-navigation/native";
 
 function App({ navigation }) {
   const [items, setItems] = useState([]);
@@ -44,20 +45,28 @@ function App({ navigation }) {
     navigation.navigate("Details", { postId: postingId });
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let snapshot = await getCollectionByOrder("post", "created", 20);
-      console.log(snapshot);
-      const itemsData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setItems(itemsData);
-      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
-    };
+  const fetchData = async () => {
+    let snapshot = await getCollectionByOrder("post", "created", 20);
+    console.log(snapshot);
+    const itemsData = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setItems(itemsData);
+    setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
+
+  /*
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
+  */
 
   const fetchMore = () => {
     if (!lastVisible) return;
@@ -82,26 +91,19 @@ function App({ navigation }) {
   };
 
   const renderItem = ({ item }) => (
-    
-     <TouchableOpacity onPress={() => openDetails(item.id)}>
-      
-      <Card 
-    flex
-    borderless
-    shadow
-    style={styles.card}
-    title= {item.title}
-    caption={item.description}
-    avatar={item.image}
-    image={item.image}
-    location
-    
-    
-    
-    
-   
-  />
- </TouchableOpacity>
+    <TouchableOpacity onPress={() => openDetails(item.id)}>
+      <Card
+        flex
+        borderless
+        shadow
+        style={styles.card}
+        title={item.title}
+        caption={item.description}
+        avatar={item.image}
+        image={item.image}
+        location
+      />
+    </TouchableOpacity>
   );
 
   return (
@@ -119,12 +121,11 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor:"white"
+    backgroundColor: "white",
   },
-  card:{
-    marginBottom:20,
-    backgroundColor:"white"
-    
+  card: {
+    marginBottom: 20,
+    backgroundColor: "white",
   },
   item: {
     flexDirection: "row",
@@ -133,19 +134,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     elevation: 10,
     borderBottomWidth: 2,
-    
-    
   },
   image: {
     width: 80,
     height: 80,
     borderRadius: 4,
-    left:5,
-    
-    
-    
-    
-    
+    left: 5,
   },
   itemDetails: {
     flex: 1,
@@ -174,8 +168,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#4169E1",
     borderRadius: 50,
     paddingHorizontal: 16,
-    
-
   },
 });
 

@@ -19,9 +19,10 @@ import { storage } from "../../firebaseConfig";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData } from "../Api/FirebaseDb";
-import defaultImage from '../assets/post-add-icon.png';
+import defaultImage from "../assets/post-add-icon.png";
+import { auth } from "../../firebaseConfig";
 
-function App ({navigation}) {
+function App({ navigation }) {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,8 +41,6 @@ function App ({navigation}) {
     let today = new Date();
 
     const storageRef = ref(storage, `images/IMG${today.getTime()}`);
-    //const uploadTask = uploadBytes(storageRef, image.path);
-    //storageRef.putFile(image.path);
 
     try {
       const snapshot = await uploadBytes(storageRef, image.uri);
@@ -55,9 +54,11 @@ function App ({navigation}) {
         price,
         category,
         created: new Date(),
+        owner: auth.currentUser.uid,
       };
 
       saveData("post", postData);
+      navigation.navigate("Home");
     } catch (error) {
       console.log("Error uploading image: ", error);
     }
@@ -66,8 +67,8 @@ function App ({navigation}) {
   return (
     <ScrollView style={styles.backgroundWhite}>
       <View>
-      <Image source={defaultImage} style={styles.addpostPicture} /> 
-      <View style={styles.containerImage}>
+        <Image source={defaultImage} style={styles.addpostPicture} />
+        <View style={styles.containerImage}>
           {image && (
             <Image source={{ uri: image.uri }} style={styles.previewImage} />
           )}
@@ -117,7 +118,7 @@ function App ({navigation}) {
       </View>
     </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -126,14 +127,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerCa: {
-   
     position: "absolute",
     bottom: 85,
     left: 45,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: "#D3D3D3",
     padding: 10,
     borderRadius: 20,
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 1,
   },
   containerImage: {
@@ -145,25 +145,20 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   chooseImageButton: {
-  
     backgroundColor: "#white",
     padding: 10,
     borderRadius: 5,
-    left:180
+    left: 180,
   },
   chooseImageButtonText: {
     fontSize: 16,
     color: "white",
   },
   previewImage: {
-    position:"absolute",
+    position: "absolute",
     width: 200,
     height: 200,
-    bottom:60,
-   
-      
-      
-
+    bottom: 60,
   },
   addpostPicture: {
     width: 200,
@@ -171,8 +166,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 80,
     marginTop: 50,
-    left:100
-   
+    left: 100,
   },
   input: {
     height: 100,
@@ -182,7 +176,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
-    borderRadius:20
+    borderRadius: 20,
   },
   input_title: {
     height: 40,
@@ -192,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
-    borderRadius:20
+    borderRadius: 20,
   },
   input_width100: {
     height: 40,
@@ -203,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "white",
     alignItems: "left",
-    borderRadius:20
+    borderRadius: 20,
   },
   description: {
     height: 150,
@@ -213,7 +207,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
-    borderRadius:20
+    borderRadius: 20,
   },
   createPostButton: {
     backgroundColor: "#0000FF",
