@@ -7,6 +7,7 @@ import ProfilePage from "./src/screens/ProfilePage";
 import EditPage from "./src/screens/EditPage";
 import PostDetails from "./src/screens/PostDetails";
 import ResetPage from "./src/screens/ResetPage";
+import Chat from "./src/screens/ChatPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ function App() {
         <Stack.Screen name="Edit" component={EditPage} />
         <Stack.Screen name="Reset" component={ResetPage} />
         <Stack.Screen name="Details" component={PostDetails} />
+        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,6 +17,7 @@ const PostDetails = ({ route, navigation }) => {
   const [description, setDescription] = useState("");
   const [src, setSrc] = useState("");
   const { postId } = route.params;
+  const [owner, setOwner] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,6 +28,7 @@ const PostDetails = ({ route, navigation }) => {
       setCategory(data.category);
       setDescription(data.description);
       setSrc(data.image);
+      setOwner(data.owner);
 
       /*
       const itemsData = snapshot.docs.map((doc) => ({
@@ -51,12 +53,20 @@ const PostDetails = ({ route, navigation }) => {
     // Implement cancel logic here
   };
 
+  const goChat = () => {
+    navigation.navigate("Chat", {
+      postId: postId,
+      receiverId: owner,
+      title: title,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
         <View style={styles.headerButtons}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+          <TouchableOpacity style={styles.saveButton} onPress={goChat}>
             <Text style={styles.buttonText}>Contact</Text>
           </TouchableOpacity>
         </View>
@@ -121,7 +131,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 4,
     marginRight: 8,
-    borderRadius:25,
+    borderRadius: 25,
   },
   cancelButton: {
     backgroundColor: "#EF5350",

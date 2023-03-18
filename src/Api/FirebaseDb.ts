@@ -5,6 +5,7 @@ import { db } from "../../firebaseConfig";
 import {
   collection,
   addDoc,
+  setDoc,
   query,
   getDocs,
   orderBy,
@@ -25,6 +26,25 @@ const saveData = async (collectionName: string, data: any) => {
   try {
     const docRef = await addDoc(collection(db, collectionName), data);
     console.log("Document written with ID: ", docRef.id);
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+/**
+ * saving the data with Id
+ * @param {string} collectionName the collection name
+ * @param {any} data the data to be inserted
+ * @param {string} id the id to be inserted
+ */
+const saveDataWithId = async (
+  collectionName: string,
+  data: any,
+  _id: string
+) => {
+  try {
+    const docRef = await setDoc(doc(db, collectionName, _id), data);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -88,7 +108,6 @@ const getCollectionByQuery = async (queryFnc: any) => {
 };
 
 const getDocById = async (collectionName: string, id: string) => {
-  console.log("!!!!!!!!!!!!" + id);
   const ref = doc(db, collectionName, id);
   const docSnap = await getDoc(ref);
   let returnObj = {};
@@ -108,4 +127,5 @@ export {
   getCollectionByOrder,
   getCollectionByQuery,
   getDocById,
+  saveDataWithId,
 };
