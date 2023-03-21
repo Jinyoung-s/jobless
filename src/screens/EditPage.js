@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button, Text } from "galio-framework";
-import { doc, getDocs, collection, query, where, updateDoc } from "firebase/firestore"; 
-import { db, auth, app  } from "../../firebaseConfig";
+import { Button, Text, Input } from "galio-framework";
+import { doc, getDocs, collection, where, updateDoc } from "firebase/firestore"; 
+import { db, auth } from "../../firebaseConfig";
+import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import defaultImage from '../assets/default-image.png'
@@ -10,7 +11,6 @@ import {
     View,
     TextInput,
     TouchableOpacity,
-    ScrollView,
     StyleSheet,
     Image,
     Modal 
@@ -20,16 +20,18 @@ function App () {
  
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [password, setPassword] = useState("");
     const [birthdate, setBirthday] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
     const [birthDateError, setBirthDateError] = useState("");    
-    const [passwordError, setPasswordError] = useState("");
     const [image, setImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [oldPasswordError, setOldPasswordError] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
+    const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
 
 
     const handleUpdate = () => {
@@ -49,14 +51,6 @@ function App () {
       setBirthDateError('Invalid Date! Must be in the format "MM/DD/YYYY"');
     } else {
       setBirthDateError("");
-    }
-
-    if (!validatePassword(password)) {
-      setPasswordError(
-        "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
-      );
-    } else {
-      setPasswordError("");
     }
 
     updateUserData();
@@ -119,13 +113,59 @@ function App () {
     setBirthDateError("");
   };
 
+  const handleModalClear = () => {
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setOldPasswordError("");
+    setNewPasswordError("");
+    setConfirmNewPasswordError("");
+  };
+
   const showDialog = () => {
+    handleModalClear();
     setIsModalVisible(true);
   };
 
-  const handlePasswordUpdate = () => {
+  const handlePassUpdateVal = () => {
+
+    if (!validatePassword(newPassword)) {
+      setNewPasswordError(
+        "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
+      );
+    } else {
+      setNewPasswordError("");
+    }
+
+    if (confirmNewPassword != newPassword) {
+      setConfirmNewPasswordError(
+        "Please ensure that new and confirm password match!"
+      );
+    } else {
+      setConfirmNewPasswordError("");
+      handlePasswordUpdate();
+    }    
+  }
+
+  const handlePasswordUpdate = async () => {
     // Perform update action
-    setIsModalVisible(false);
+    const user = auth.currentUser;
+    const email = user.email;
+    signInWithEmailAndPassword(auth, email, oldPassword)
+    .then(() => {
+      updatePassword(user, newPassword).then(() => {
+        console.log("Update successful!")
+        setIsModalVisible(false);
+      }).catch((error) => {
+        console.log("Error!")
+      });
+    })
+    .catch((error) => { 
+        console.error(error);
+        setOldPasswordError(
+          "Current Password is wrong!"
+        );
+    });
   };
 
   const handleCancel = () => {
@@ -206,6 +246,11 @@ function App () {
       borderColor: 'black',
       borderWidth: 1,
     },
+    passwordinput:{
+      width:250,
+      height:50,
+      borderRadius:25
+    },
   });
 
 
@@ -247,22 +292,44 @@ function App () {
         <Modal visible={isModalVisible} animationType="slide">
           <View style={styles.container}>
             <Text style={{ fontSize: 20 }}>Reset Password</Text>
-            <TextInput
-              style={styles.textInput}
+            <Input password viewPass
+              style={styles.passwordinput}
+              placeholder="Old Password"
+              value={oldPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setOldPassword(text)}
+            />
+            {oldPasswordError !== "" && (
+            <Text color = "red">{oldPasswordError}</Text>
+            )}
+
+            <Input password viewPass
+              style={styles.passwordinput}
               placeholder="New Password"
-              secureTextEntry={true}
               value={newPassword}
-              onChangeText={setNewPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setNewPassword(text)}
             />
-            <TextInput
-              style={styles.textInput}
+            {newPasswordError !== "" && (
+            <Text color = "red">{newPasswordError}</Text>
+            )}
+
+            <Input password viewPass
+              style={styles.passwordinput}
               placeholder="Confirm New Password"
-              secureTextEntry={true}
+              autoCapitalize="none"
+              autoCorrect={false}
               value={confirmNewPassword}
-              onChangeText={setConfirmNewPassword}
+              onChangeText={(text) => setConfirmNewPassword(text)}
             />
+            {confirmNewPasswordError !== "" && (
+            <Text color = "red">{confirmNewPasswordError}</Text>
+            )}
+
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
-              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePasswordUpdate}>Save</Button> 
+              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePassUpdateVal}>Save</Button> 
               <Button style={{ backgroundColor: "#808080"}} round size="small" onPress={handleCancel}>Cancel</Button>
             </View>
           </View>
