@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { Button, Text, Input } from "galio-framework";
-import { doc, getDocs, collection, where, updateDoc } from "firebase/firestore"; 
-import { db, auth } from "../../firebaseConfig";
+import { doc, getDocs, collection, where, updateDoc, query } from "firebase/firestore"; 
+import { db, auth, storage } from "../../firebaseConfig";
 import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import defaultImage from '../assets/default-image.png'
+import { saveDataWithId } from "../Api/FirebaseDb";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
     View,
@@ -16,7 +18,7 @@ import {
     Modal 
   } from "react-native";
 
-function App () {
+function App ({navigation}) {
  
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -32,9 +34,25 @@ function App () {
     const [oldPasswordError, setOldPasswordError] = useState('');
     const [newPasswordError, setNewPasswordError] = useState('');
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
+    const [profileImg, setprofileImg] = useState("");
 
+    useEffect(() => {
+      const userId = auth.currentUser.uid;
+            // Get the profile picture URL from storage
+            const qu = query(collection(db, "profileimages"), where("owner", "==", userId));
+            getDocs(qu).then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                setprofileImg(doc.data().imageURI);
+                console.log(doc.data());    
+              });
+      
+            });
+    }, []);
 
     const handleUpdate = () => {
+
+    postImage();
+
     if (!isValidFirstName(firstName)) {
       setFirstNameError("Invalid First Name");
     } else {
@@ -54,6 +72,34 @@ function App () {
     }
 
     updateUserData();
+
+    navigation.navigate("Profile");
+
+  };
+
+  const postImage = async () => {
+
+    const userid = auth.currentUser.uid;
+    const storageRef = ref(storage, `userImages/IMG-${userid}`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, image.uri);
+      console.log("Image uploaded successfully");
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      const postData = {
+        created: new Date(),
+        imageURI: image.uri,
+        imageURL: downloadURL,
+        owner: userid,
+      };
+
+      console.log(userid);
+      saveDataWithId("profileimages", postData, userid);
+      
+    } catch (error) {
+      console.log("Error uploading image: ", error);
+    }
   };
 
   
@@ -88,8 +134,7 @@ function App () {
             console.error('Error updating document: ', e);
             }
         }
-        
-    };
+  };
 
   const handleChooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync();
@@ -211,6 +256,18 @@ function App () {
       justifyContent: "center",
       backgroundColor:"white"
     },
+    containerImage: {
+      flex: 1,
+      alignItems: "center",
+    },
+    previewImage: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      bottom: 123,
+      marginTop: 50,
+      borderRadius: 10,
+    },
     textInput: {
       height: 40,
       width: "80%",
@@ -226,19 +283,10 @@ function App () {
       borderRadius: 10,
       marginBottom: 80,
       marginTop: 50,
-      // borderColor: 'black',
-      // borderWidth: 1,
-      // overflow: 'hidden',
     },
     containerCamera: {
-      // flex: 1,
-      // backgroundColor: "gray",
-      // borderRadius: 10,
-      // padding: 20,
-      // width: 70,
-
       position: 'absolute',
-      bottom: 85,
+      bottom: 130,
       left: 45,
       backgroundColor: '#D3D3D3',
       padding: 10,
@@ -273,7 +321,12 @@ function App () {
           You know what to do...
         </Text>
 
-        <Image source={defaultImage} style={styles.profilePicture} />  
+        <Image source={profileImg ? { uri: profileImg } : defaultImage} style={styles.profilePicture} />  
+        <View style={styles.containerImage}>
+          {image && (
+            <Image source={{ uri: image.uri }} style={styles.previewImage} />
+          )}
+        </View>
 
         <TouchableOpacity style={styles.chooseImageButton} onPress={handleChooseImage}>
           <View style={styles.containerCamera}>

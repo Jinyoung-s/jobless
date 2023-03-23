@@ -21,12 +21,14 @@ import {
 import React, { useState, useEffect, useCallback } from "react";
 import { db, collection } from "../../firebaseConfig";
 import { Button, Card } from "galio-framework";
-import { query, orderBy, startAfter, limit } from "firebase/firestore";
+import { query, orderBy, startAfter, limit, getDocs, where  } from "firebase/firestore";
+import defaultImage from '../assets/default-image.png'
 import { useFocusEffect } from "@react-navigation/native";
 
 function App({ navigation }) {
   const [items, setItems] = useState([]);
   const [lastVisible, setLastVisible] = useState(null);
+  const [profileImg, setprofileImg] = useState("");
 
   const handleLogout = () => {
     auth
@@ -48,25 +50,30 @@ function App({ navigation }) {
   const fetchData = async () => {
     let snapshot = await getCollectionByOrder("post", "created", 20);
     console.log(snapshot);
-    const itemsData = snapshot.docs.map((doc) => ({
+    const itemsData = await snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
     setItems(itemsData);
     setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+    console.log("This: " + itemsData.owner);
+   
+    // Get the profile picture in the profileimages collection
+    if (itemsData.owner != undefined){
+      const userId = auth.currentUser.uid;
+      const qu = query(collection(db, "profileimages"), where("owner", "==", itemsData.owner));
+      getDocs(qu).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setprofileImg(doc.data().imageURI);
+          console.log(doc.data());    
+        });
+      });
+    }
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData();  
   }, []);
-
-  /*
-  useFocusEffect(
-    useCallback(() => {
-      fetchData();
-    }, [])
-  );
-  */
 
   const fetchMore = () => {
     if (!lastVisible) return;
@@ -99,7 +106,7 @@ function App({ navigation }) {
         style={styles.card}
         title={item.title}
         caption={item.description}
-        avatar={item.image}
+        avatar={profileImg ? profileImg : defaultImage }
         image={item.image}
         location
       />
