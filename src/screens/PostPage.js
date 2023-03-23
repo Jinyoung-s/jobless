@@ -40,7 +40,7 @@ function App({ navigation }) {
   const handleCreatePost = async () => {
     let today = new Date();
 
-    const storageRef = ref(storage, `images/IMG${today.getTime()}`);
+    const storageRef = ref(storage, `postImages/IMG${today.getTime()}`);
 
     try {
       const snapshot = await uploadBytes(storageRef, image.uri);

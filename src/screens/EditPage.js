@@ -1,38 +1,58 @@
-import React, { useState } from "react";
-import { Button, Text } from "galio-framework";
-import { doc, getDocs, collection, query, where, updateDoc } from "firebase/firestore"; 
-import { db, auth, app  } from "../../firebaseConfig";
+import React, { useState, useEffect  } from "react";
+import { Button, Text, Input } from "galio-framework";
+import { doc, getDocs, collection, where, updateDoc, query } from "firebase/firestore"; 
+import { db, auth, storage } from "../../firebaseConfig";
+import { signInWithEmailAndPassword, updatePassword } from "firebase/auth";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import defaultImage from '../assets/default-image.png'
+import { saveDataWithId } from "../Api/FirebaseDb";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import {
     View,
     TextInput,
     TouchableOpacity,
-    ScrollView,
     StyleSheet,
     Image,
     Modal 
   } from "react-native";
 
-function App () {
+function App ({navigation}) {
  
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [password, setPassword] = useState("");
     const [birthdate, setBirthday] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
     const [birthDateError, setBirthDateError] = useState("");    
-    const [passwordError, setPasswordError] = useState("");
     const [image, setImage] = useState(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const [oldPasswordError, setOldPasswordError] = useState('');
+    const [newPasswordError, setNewPasswordError] = useState('');
+    const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
+    const [profileImg, setprofileImg] = useState("");
 
+    useEffect(() => {
+      const userId = auth.currentUser.uid;
+            // Get the profile picture URL from storage
+            const qu = query(collection(db, "profileimages"), where("owner", "==", userId));
+            getDocs(qu).then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                setprofileImg(doc.data().imageURI);
+                console.log(doc.data());    
+              });
+      
+            });
+    }, []);
 
     const handleUpdate = () => {
+
+    postImage();
+
     if (!isValidFirstName(firstName)) {
       setFirstNameError("Invalid First Name");
     } else {
@@ -51,15 +71,35 @@ function App () {
       setBirthDateError("");
     }
 
-    if (!validatePassword(password)) {
-      setPasswordError(
-        "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
-      );
-    } else {
-      setPasswordError("");
-    }
-
     updateUserData();
+
+    navigation.navigate("Profile");
+
+  };
+
+  const postImage = async () => {
+
+    const userid = auth.currentUser.uid;
+    const storageRef = ref(storage, `userImages/IMG-${userid}`);
+
+    try {
+      const snapshot = await uploadBytes(storageRef, image.uri);
+      console.log("Image uploaded successfully");
+      const downloadURL = await getDownloadURL(snapshot.ref);
+
+      const postData = {
+        created: new Date(),
+        imageURI: image.uri,
+        imageURL: downloadURL,
+        owner: userid,
+      };
+
+      console.log(userid);
+      saveDataWithId("profileimages", postData, userid);
+      
+    } catch (error) {
+      console.log("Error uploading image: ", error);
+    }
   };
 
   
@@ -94,8 +134,7 @@ function App () {
             console.error('Error updating document: ', e);
             }
         }
-        
-    };
+  };
 
   const handleChooseImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync();
@@ -119,13 +158,59 @@ function App () {
     setBirthDateError("");
   };
 
+  const handleModalClear = () => {
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setOldPasswordError("");
+    setNewPasswordError("");
+    setConfirmNewPasswordError("");
+  };
+
   const showDialog = () => {
+    handleModalClear();
     setIsModalVisible(true);
   };
 
-  const handlePasswordUpdate = () => {
+  const handlePassUpdateVal = () => {
+
+    if (!validatePassword(newPassword)) {
+      setNewPasswordError(
+        "Invalid password! Must have: \n\n At least one letter \n At least one number \n At least one special character @, $, !, %, *, #, ?, &"
+      );
+    } else {
+      setNewPasswordError("");
+    }
+
+    if (confirmNewPassword != newPassword) {
+      setConfirmNewPasswordError(
+        "Please ensure that new and confirm password match!"
+      );
+    } else {
+      setConfirmNewPasswordError("");
+      handlePasswordUpdate();
+    }    
+  }
+
+  const handlePasswordUpdate = async () => {
     // Perform update action
-    setIsModalVisible(false);
+    const user = auth.currentUser;
+    const email = user.email;
+    signInWithEmailAndPassword(auth, email, oldPassword)
+    .then(() => {
+      updatePassword(user, newPassword).then(() => {
+        console.log("Update successful!")
+        setIsModalVisible(false);
+      }).catch((error) => {
+        console.log("Error!")
+      });
+    })
+    .catch((error) => { 
+        console.error(error);
+        setOldPasswordError(
+          "Current Password is wrong!"
+        );
+    });
   };
 
   const handleCancel = () => {
@@ -171,6 +256,18 @@ function App () {
       justifyContent: "center",
       backgroundColor:"white"
     },
+    containerImage: {
+      flex: 1,
+      alignItems: "center",
+    },
+    previewImage: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      bottom: 123,
+      marginTop: 50,
+      borderRadius: 10,
+    },
     textInput: {
       height: 40,
       width: "80%",
@@ -186,25 +283,21 @@ function App () {
       borderRadius: 10,
       marginBottom: 80,
       marginTop: 50,
-      // borderColor: 'black',
-      // borderWidth: 1,
-      // overflow: 'hidden',
     },
     containerCamera: {
-      // flex: 1,
-      // backgroundColor: "gray",
-      // borderRadius: 10,
-      // padding: 20,
-      // width: 70,
-
       position: 'absolute',
-      bottom: 85,
+      bottom: 130,
       left: 45,
       backgroundColor: '#D3D3D3',
       padding: 10,
       borderRadius: 20,
       borderColor: 'black',
       borderWidth: 1,
+    },
+    passwordinput:{
+      width:250,
+      height:50,
+      borderRadius:25
     },
   });
 
@@ -228,7 +321,12 @@ function App () {
           You know what to do...
         </Text>
 
-        <Image source={defaultImage} style={styles.profilePicture} />  
+        <Image source={profileImg ? { uri: profileImg } : defaultImage} style={styles.profilePicture} />  
+        <View style={styles.containerImage}>
+          {image && (
+            <Image source={{ uri: image.uri }} style={styles.previewImage} />
+          )}
+        </View>
 
         <TouchableOpacity style={styles.chooseImageButton} onPress={handleChooseImage}>
           <View style={styles.containerCamera}>
@@ -247,22 +345,44 @@ function App () {
         <Modal visible={isModalVisible} animationType="slide">
           <View style={styles.container}>
             <Text style={{ fontSize: 20 }}>Reset Password</Text>
-            <TextInput
-              style={styles.textInput}
+            <Input password viewPass
+              style={styles.passwordinput}
+              placeholder="Old Password"
+              value={oldPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setOldPassword(text)}
+            />
+            {oldPasswordError !== "" && (
+            <Text color = "red">{oldPasswordError}</Text>
+            )}
+
+            <Input password viewPass
+              style={styles.passwordinput}
               placeholder="New Password"
-              secureTextEntry={true}
               value={newPassword}
-              onChangeText={setNewPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={(text) => setNewPassword(text)}
             />
-            <TextInput
-              style={styles.textInput}
+            {newPasswordError !== "" && (
+            <Text color = "red">{newPasswordError}</Text>
+            )}
+
+            <Input password viewPass
+              style={styles.passwordinput}
               placeholder="Confirm New Password"
-              secureTextEntry={true}
+              autoCapitalize="none"
+              autoCorrect={false}
               value={confirmNewPassword}
-              onChangeText={setConfirmNewPassword}
+              onChangeText={(text) => setConfirmNewPassword(text)}
             />
+            {confirmNewPasswordError !== "" && (
+            <Text color = "red">{confirmNewPasswordError}</Text>
+            )}
+
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
-              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePasswordUpdate}>Save</Button> 
+              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePassUpdateVal}>Save</Button> 
               <Button style={{ backgroundColor: "#808080"}} round size="small" onPress={handleCancel}>Cancel</Button>
             </View>
           </View>
