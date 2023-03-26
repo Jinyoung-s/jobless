@@ -2,7 +2,7 @@ import { View, StyleSheet, TextInput, Button } from "react-native";
 import { Text, Block } from "galio-framework";
 import React, { useState, useEffect, useCallback } from "react";
 import { auth, db } from "../../firebaseConfig";
-import { saveDataWithId } from "../Api/FirebaseDb";
+import { saveDataWithId, updateDataWithId } from "../Api/FirebaseDb";
 import {
   collection,
   addDoc,
@@ -14,6 +14,7 @@ import {
   where,
   doc,
   onSnapshot,
+  arrayUnion,
 } from "firebase/firestore";
 import { async } from "@firebase/util";
 
@@ -29,27 +30,51 @@ function Chat({ route, navigation }) {
   };
 
   useEffect(() => {
-    let messages = [];
-    const unsub = onSnapshot(doc(db, "chats", currentUserUid), (doc) => {
-      messages.push({ ...doc.data(), id: doc.id });
-      setMessges(messages);
-      //setMessges(newArr);
-
-      console.log(messages);
-    });
-
+    let messages1 = [];
+    const unsub = onSnapshot(
+      doc(db, "chats", currentUserUid + postId),
+      (doc) => {
+        if (doc.data()) {
+          messages1 = doc.data().chats;
+          console.log(messages1);
+          setMessges(messages1);
+        }
+      }
+    );
     return () => unsub();
   }, []);
 
   const sendMessage = () => {
-    const chatData = {
-      senderUid: currentUserUid,
-      recipientUid: receiverId,
-      message,
-      created: new Date(),
-    };
+    if (messages && messages.length != 0) {
+      const chatData = {
+        senderUid: currentUserUid,
+        recipientUid: receiverId,
+        message,
+        created: new Date(),
+      };
 
-    saveDataWithId("chats", chatData, currentUserUid);
+      updateDataWithId(
+        "chats",
+        {
+          chats: arrayUnion(chatData),
+        },
+        currentUserUid + postId
+      );
+    } else {
+      const chatData = {
+        post_owner: receiverId,
+        job_finder: currentUserUid,
+        chats: [
+          {
+            senderUid: currentUserUid,
+            recipientUid: receiverId,
+            message,
+            created: new Date(),
+          },
+        ],
+      };
+      saveDataWithId("chats", chatData, currentUserUid + postId);
+    }
     setMessage("");
   };
 
