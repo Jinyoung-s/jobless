@@ -13,6 +13,8 @@ import {
   limit,
   where,
   onSnapshot,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -45,6 +47,18 @@ const saveDataWithId = async (
 ) => {
   try {
     const docRef = await setDoc(doc(db, collectionName, _id), data);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+const updateDataWithId = async (
+  collectionName: string,
+  data: any,
+  _id: string
+) => {
+  try {
+    const docRef = await updateDoc(doc(db, collectionName, _id), data);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -121,6 +135,29 @@ const getDocById = async (collectionName: string, id: string) => {
   return returnObj;
 };
 
+const getUserData = async (userId: string) => {
+  let userData;
+  const q = query(collection(db, "users"), where("uid", "==", userId));
+  const docSnap = await getDocs(q);
+  const itemsData = await docSnap.docs.map((doc) => {
+    userData = doc.data();
+  });
+  userData.imgURI = "";
+
+  const qu = await query(
+    collection(db, "profileimages"),
+    where("owner", "==", userId)
+  );
+
+  const imgSnap = await getDocs(qu);
+  const imgData = await imgSnap.docs.map((docImg) => {
+    console.log("2222");
+    userData.profileImgURI = docImg.data().imageURI;
+  });
+
+  return userData;
+};
+
 export {
   saveData,
   getCollection,
@@ -128,4 +165,6 @@ export {
   getCollectionByQuery,
   getDocById,
   saveDataWithId,
+  getUserData,
+  updateDataWithId,
 };

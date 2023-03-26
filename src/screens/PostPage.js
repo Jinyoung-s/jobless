@@ -3,7 +3,7 @@
  * 2/13/2023 created - jys
  * 2/23/2023 modified - jys
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,12 +15,11 @@ import {
   ScrollView,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { storage } from "../../firebaseConfig";
+import { storage, auth } from "../../firebaseConfig";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { saveData } from "../Api/FirebaseDb";
+import { saveData, getUserData } from "../Api/FirebaseDb";
 import defaultImage from "../assets/post-add-icon.png";
-import { auth } from "../../firebaseConfig";
 
 function App({ navigation }) {
   const [image, setImage] = useState(null);
@@ -41,7 +40,7 @@ function App({ navigation }) {
     let today = new Date();
 
     const storageRef = ref(storage, `postImages/IMG${today.getTime()}`);
-
+    const userData = await getUserData(auth.currentUser.uid);
     try {
       const snapshot = await uploadBytes(storageRef, image.uri);
       console.log("Image uploaded successfully");
@@ -55,6 +54,9 @@ function App({ navigation }) {
         category,
         created: new Date(),
         owner: auth.currentUser.uid,
+        profileImg: userData.profileImgURI
+          ? userData.profileImgURI
+          : defaultImage,
       };
 
       saveData("post", postData);
