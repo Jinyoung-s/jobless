@@ -146,7 +146,7 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "white",
+    backgroundColor: "#F505205",
   },
   card: {
     marginBottom: 20,
