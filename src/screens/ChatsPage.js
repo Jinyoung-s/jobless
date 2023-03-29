@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { FlatList, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "../../firebaseConfig";
 
@@ -26,8 +26,11 @@ const ChatsPage = () => {
       const recipientSnapshot = await getDocs(chatMessagesQuery2);
 
       const chatMessagesData = [
-        ...senderSnapshot.docs.map((doc) => doc.data()),
-        ...recipientSnapshot.docs.map((doc) => doc.data()),
+        ...senderSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })),
+        ...recipientSnapshot.docs.map((doc) =>  ({...doc.data(), id : doc.id})),
       ];
 
       let listData = [];
@@ -44,13 +47,20 @@ const ChatsPage = () => {
     fetchChatMessages();
   }, [currentUserUid]);
 
+  const goChat = (item) => {
+    navigation.navigate("ChatRoom", { roomId: item.id });
+  };
+
+
   const renderItem = ({ item }) => (
     <View style={styles.chatMessageContainer}>
-      <Text style={styles.chatMessage}>{item.message}</Text>
-      <Text style={styles.chatMessageMeta}>
-        {item.senderUid === currentUserUid ? "You" : "Them"} ·{" "}
-        {item.created.toDate().toLocaleString()}
-      </Text>
+      <TouchableOpacity onPress={() => goChat(item)}>
+        <Text style={styles.chatMessage}>{item.message}</Text>
+        <Text style={styles.chatMessageMeta}>
+          {item.senderUid === currentUserUid ? "You" : "Them"} ·{" "}
+          {item.created.toDate().toLocaleString()}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 
