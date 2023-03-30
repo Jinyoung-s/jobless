@@ -34,7 +34,7 @@ function TabNavigator() {
     >
       <Tab.Screen name="Home" component={HomePage} 
       options={{
-        headerStyle: { backgroundColor: '#0000FF' }, // replace with your desired color
+        headerStyle: { backgroundColor: 'white' }, // replace with your desired color
       }} 
       />
       <Tab.Screen name="Post" component={PostPage} />
