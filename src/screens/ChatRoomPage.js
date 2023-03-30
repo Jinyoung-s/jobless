@@ -22,7 +22,7 @@ function ChatRoom({ route, navigation }) {
   const [messages, setMessges] = useState([]);
   const [message, setMessage] = useState("");
 
-  const {  roomId } = route.params;
+  const { roomId, receiverId } = route.params;
   const currentUserUid = auth.currentUser.uid;
 
   const setDate = async (newArr) => {
@@ -31,16 +31,13 @@ function ChatRoom({ route, navigation }) {
 
   useEffect(() => {
     let messages1 = [];
-    const unsub = onSnapshot(
-      doc(db, "chats", roomId),
-      (doc) => {
-        if (doc.data()) {
-          messages1 = doc.data().chats;
-          console.log(messages1);
-          setMessges(messages1);
-        }
+    const unsub = onSnapshot(doc(db, "chats", roomId), (doc) => {
+      if (doc.data()) {
+        messages1 = doc.data().chats;
+        console.log(messages1);
+        setMessges(messages1);
       }
-    );
+    });
     return () => unsub();
   }, []);
 
@@ -58,7 +55,7 @@ function ChatRoom({ route, navigation }) {
         {
           chats: arrayUnion(chatData),
         },
-        currentUserUid + postId
+        roomId
       );
     } else {
       const chatData = {

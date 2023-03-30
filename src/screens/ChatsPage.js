@@ -1,56 +1,75 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "../../firebaseConfig";
 
-const ChatsPage = () => {
+const ChatsPage = ({ navigation }) => {
   const currentUserUid = auth.currentUser.uid;
   const [chatMessages, setChatMessages] = useState([]);
 
+  let messages1 = [];
+  const fetchChatMessages = async () => {
+    console.log(currentUserUid);
+    const chatsCollection = collection(db, "chats");
+    const chatMessagesQuery1 = query(
+      chatsCollection,
+      where("job_finder", "==", currentUserUid)
+    );
+
+    const chatMessagesQuery2 = query(
+      chatsCollection,
+      where("post_owner", "==", currentUserUid)
+    );
+
+    const senderSnapshot = await getDocs(chatMessagesQuery1);
+    const recipientSnapshot = await getDocs(chatMessagesQuery2);
+
+    const chatMessagesData = [
+      ...senderSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })),
+      ...recipientSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+    ];
+
+    let listData = [];
+    chatMessagesData.map((doc) => {
+      const chat = doc.chats[doc.chats.length - 1];
+      listData.push({ ...doc, ...chat });
+    });
+
+    messages1 = chatMessagesData[0].chats;
+    setChatMessages(listData);
+    console.log(messages1);
+  };
+
   useEffect(() => {
-    let messages1 = [];
-    const fetchChatMessages = async () => {
-      console.log(currentUserUid);
-      const chatsCollection = collection(db, "chats");
-      const chatMessagesQuery1 = query(
-        chatsCollection,
-        where("job_finder", "==", currentUserUid)
-      );
-
-      const chatMessagesQuery2 = query(
-        chatsCollection,
-        where("post_owner", "==", currentUserUid)
-      );
-
-      const senderSnapshot = await getDocs(chatMessagesQuery1);
-      const recipientSnapshot = await getDocs(chatMessagesQuery2);
-
-      const chatMessagesData = [
-        ...senderSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })),
-        ...recipientSnapshot.docs.map((doc) =>  ({...doc.data(), id : doc.id})),
-      ];
-
-      let listData = [];
-      chatMessagesData.map((doc) => {
-        const chat = doc.chats[doc.chats.length - 1];
-        listData.push({ ...doc, ...chat });
-      });
-
-      messages1 = chatMessagesData[0].chats;
-      setChatMessages(listData);
-      console.log(messages1);
-    };
-
     fetchChatMessages();
   }, [currentUserUid]);
 
-  const goChat = (item) => {
-    navigation.navigate("ChatRoom", { roomId: item.id });
-  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchChatMessages();
+    });
 
+    return unsubscribe;
+  }, [navigation]);
+
+  const goChat = (item) => {
+    console.log(item);
+    const receiverId =
+      item.senderUid === currentUserUid ? item.recipientUid : item.senderUid;
+    navigation.navigate("ChatRoom", {
+      roomId: item.id,
+      receiverId: receiverId,
+    });
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.chatMessageContainer}>
