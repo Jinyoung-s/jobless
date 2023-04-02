@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#F505205",
   },
   chatMessageContainer: {
     backgroundColor: "#fff",
