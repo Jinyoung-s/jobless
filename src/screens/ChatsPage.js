@@ -8,6 +8,10 @@ import {
 } from "react-native";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "../../firebaseConfig";
+import { Button, Card, Header, Block } from "galio-framework";
+import defaultImage from "../assets/default-image.png";
+import CustomHeader from "./components/CustomHeader";
+import { Image } from "react-native";
 
 const ChatsPage = ({ navigation }) => {
   const currentUserUid = auth.currentUser.uid;
@@ -41,6 +45,10 @@ const ChatsPage = ({ navigation }) => {
     let listData = [];
     chatMessagesData.map((doc) => {
       const chat = doc.chats[doc.chats.length - 1];
+      chat.avatarImg =
+        doc.job_finder === currentUserUid ? doc.owerImg : doc.jobFinderImg;
+      chat.cName =
+        doc.job_finder === currentUserUid ? doc.ownerName : doc.jobFinderName;
       listData.push({ ...doc, ...chat });
     });
 
@@ -65,7 +73,7 @@ const ChatsPage = ({ navigation }) => {
     console.log(item);
     const receiverId =
       item.senderUid === currentUserUid ? item.recipientUid : item.senderUid;
-    navigation.navigate("ChatRoom", {
+    navigation.navigate("Conversation", {
       roomId: item.id,
       receiverId: receiverId,
     });
@@ -74,11 +82,22 @@ const ChatsPage = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View style={styles.chatMessageContainer}>
       <TouchableOpacity onPress={() => goChat(item)}>
-        <Text style={styles.chatMessage}>{item.message}</Text>
-        <Text style={styles.chatMessageMeta}>
-          {item.senderUid === currentUserUid ? "You" : "Them"} ·{" "}
-          {item.created.toDate().toLocaleString()}
-        </Text>
+        <View style={styles.chatMessageRow}>
+          <Image
+            style={styles.avatar}
+            source={item.avatarImg ? item.avatarImg : defaultImage}
+          />
+          <View style={styles.chatMessageContent}>
+            <View style={styles.chatContainer}>
+              <Text style={styles.chatMessage}>{item.cName}</Text>
+              <Text style={styles.rightText}>
+                {" "}
+                {item.created.toDate().toLocaleString()}
+              </Text>
+            </View>
+            <Text style={styles.chatMessageMeta}>{item.message}</Text>
+          </View>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -105,6 +124,19 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
+  chatMessageRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 16,
+  },
+  chatMessageContent: {
+    flex: 1,
+  },
   chatMessage: {
     fontSize: 16,
     fontWeight: "bold",
@@ -113,6 +145,11 @@ const styles = StyleSheet.create({
   chatMessageMeta: {
     fontSize: 12,
     color: "#999",
+  },
+  chatContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 
