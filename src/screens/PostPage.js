@@ -20,6 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData, getUserData } from "../Api/FirebaseDb";
 import defaultImage from "../assets/post-add-icon.png";
+import { Card } from "galio-framework";
 
 function App({ navigation }) {
   const [image, setImage] = useState(null);
@@ -54,9 +55,10 @@ function App({ navigation }) {
         category,
         created: new Date(),
         owner: auth.currentUser.uid,
-        profileImg: userData.profileImgURI
-          ? userData.profileImgURI
-          : defaultImage,
+        profileImg:
+          userData && userData.profileImgURI
+            ? userData.profileImgURI
+            : defaultImage,
       };
 
       saveData("post", postData);

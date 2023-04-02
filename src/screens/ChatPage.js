@@ -3,6 +3,7 @@ import { Text, Block } from "galio-framework";
 import React, { useState, useEffect, useCallback } from "react";
 import { auth, db } from "../../firebaseConfig";
 import { saveDataWithId, updateDataWithId } from "../Api/FirebaseDb";
+import { getUserData } from "../Api/FirebaseDb";
 import {
   collection,
   addDoc,
@@ -17,16 +18,27 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { async } from "@firebase/util";
+import { connectStorageEmulator } from "firebase/storage";
 
 function Chat({ route, navigation }) {
   const [messages, setMessges] = useState([]);
   const [message, setMessage] = useState("");
+
+  const [userData, setUserData] = useState("");
+  const [ownerData, setOwnerData] = useState("");
 
   const { receiverId, title, postId } = route.params;
   const currentUserUid = auth.currentUser.uid;
 
   const setDate = async (newArr) => {
     setMessges(newArr);
+  };
+
+  const getUser = async () => {
+    const userData1 = await getUserData(auth.currentUser.uid);
+    const ownerData1 = await getUserData(receiverId);
+    setUserData(userData1);
+    setOwnerData(ownerData1);
   };
 
   useEffect(() => {
@@ -41,6 +53,8 @@ function Chat({ route, navigation }) {
         }
       }
     );
+
+    getUser();
     return () => unsub();
   }, []);
 
@@ -64,6 +78,12 @@ function Chat({ route, navigation }) {
       const chatData = {
         post_owner: receiverId,
         job_finder: currentUserUid,
+        jobFinderImg:
+          userData && userData.profileImgURI ? userData.profileImgURI : "",
+        jobFinderName: userData && userData.firstName ? userData.firstName : "",
+        ownerName: ownerData && ownerData.firstName ? ownerData.firstName : "",
+        owerImg:
+          ownerData && ownerData.profileImgURI ? ownerData.profileImgURI : "",
         chats: [
           {
             senderUid: currentUserUid,
@@ -138,7 +158,7 @@ const styles = StyleSheet.create({
   },
   currentUserMessageContainer: {
     alignSelf: "flex-end",
-    backgroundColor: "#0084ff",
+    backgroundColor: "#4682B4",
   },
   messageText: {
     fontSize: 16,

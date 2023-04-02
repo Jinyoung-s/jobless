@@ -142,7 +142,9 @@ const getUserData = async (userId: string) => {
   const itemsData = await docSnap.docs.map((doc) => {
     userData = doc.data();
   });
-  userData.imgURI = "";
+  if (userData) {
+    userData.imgURI = "";
+  }
 
   const qu = await query(
     collection(db, "profileimages"),

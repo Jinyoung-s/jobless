@@ -123,7 +123,11 @@ function App({ navigation }) {
         shadow
         style={styles.card}
         title={item.title}
-        caption={item.description}
+        caption={
+          item.description.length > 40
+            ? item.description.slice(0, 40) + "..."
+            : item.description
+        }
         avatar={item.profileImg ? item.profileImg : defaultImage}
         image={item.image}
         location
