@@ -8,8 +8,9 @@ import EditPage from "./src/screens/EditPage";
 import PostDetails from "./src/screens/PostDetails";
 import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
-import ChatRoom from "./src/screens/ChatRoomPage";
 import { Text, View, StyleSheet } from "react-native";
+import Conversation from "./src/screens/ChatRoomPage";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -77,7 +78,7 @@ function App() {
         <Stack.Screen name="Profile" component={ProfilePage} />
         <Stack.Screen name="Reset" component={ResetPage} />
         <Stack.Screen name="Chat" component={Chat} />
-
+        <Stack.Screen name="Conversation" component={Conversation} />
       </Stack.Navigator>
     </NavigationContainer>
   );
