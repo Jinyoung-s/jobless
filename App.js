@@ -60,8 +60,8 @@ function App() {
         
         />
         <Stack.Screen 
-          name="ChatRoom" 
-          component={ChatRoom}
+          name="Conversation" 
+          component={Conversation}
           options={{
             title: 'Conversation',
             headerStyle: {
@@ -78,7 +78,6 @@ function App() {
         <Stack.Screen name="Profile" component={ProfilePage} />
         <Stack.Screen name="Reset" component={ResetPage} />
         <Stack.Screen name="Chat" component={Chat} />
-        <Stack.Screen name="Conversation" component={Conversation} />
       </Stack.Navigator>
     </NavigationContainer>
   );
