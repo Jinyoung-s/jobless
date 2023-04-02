@@ -19,7 +19,7 @@ import { storage, auth } from "../../firebaseConfig";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData, getUserData } from "../Api/FirebaseDb";
-import defaultImage from "../assets/post-add-icon.png";
+import defaultImage from "../assets/post-logo-removebg-preview.png";
 
 function App({ navigation }) {
   const [image, setImage] = useState(null);
@@ -83,30 +83,33 @@ function App({ navigation }) {
             <MaterialIcons name="camera-alt" size={30} color="black" />
           </View>
         </TouchableOpacity>
-      </View>
-      <View style={styles.container}>
+
         <TextInput
           style={styles.input_title}
           placeholder="Title"
           onChangeText={(text) => setTitle(text)}
           value={title}
         />
-        <View style={styles.inputContainer}>
+
+        <View style={styles.inputPriceCategoryContainer}>
           <TextInput
-            style={styles.input_width100}
+            style={styles.input_width50}
             placeholder="Price"
             onChangeText={(text) => setPrice(text)}
             value={price}
           />
           <TextInput
-            style={styles.input_width100}
+            style={styles.input_width50}
             placeholder="Category"
             onChangeText={(text) => setCategory(text)}
             value={category}
           />
         </View>
+
         <TextInput
           style={styles.description}
+          multiline={true}
+          numberOfLines={100}
           placeholder="Description"
           onChangeText={(text) => setDescription(text)}
           value={description}
@@ -117,7 +120,12 @@ function App({ navigation }) {
         >
           <Text style={styles.createPostButtonText}>Create Post</Text>
         </TouchableOpacity>
+
       </View>
+
+      {/* <View style={styles.container}>
+        
+      </View> */}
     </ScrollView>
   );
 }
@@ -130,8 +138,8 @@ const styles = StyleSheet.create({
   },
   containerCa: {
     position: "absolute",
-    bottom: 85,
-    left: 45,
+    bottom: 105,
+    left: 50,
     backgroundColor: "#D3D3D3",
     padding: 10,
     borderRadius: 20,
@@ -140,11 +148,11 @@ const styles = StyleSheet.create({
   },
   containerImage: {
     flex: 1,
-    marginLeft: 30,
+    alignItems: "center",
   },
   inputContainer: {
     width: 300,
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   chooseImageButton: {
     backgroundColor: "#white",
@@ -160,69 +168,71 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 200,
     height: 200,
-    bottom: 60,
+    bottom: 80,
+    marginTop: 50,
+    borderRadius: 10,
   },
   addpostPicture: {
-    width: 200,
+    width: 190,
     height: 200,
     borderRadius: 10,
     marginBottom: 80,
     marginTop: 50,
     left: 100,
   },
-  input: {
-    height: 100,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: 300,
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "white",
-    borderRadius: 20,
-  },
   input_title: {
-    height: 40,
-    borderColor: "gray",
+    borderColor: "transparent",
     borderWidth: 1,
     width: 300,
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
     borderRadius: 20,
+    marginLeft: 42,
   },
-  input_width100: {
-    height: 40,
-    borderColor: "gray",
+  inputPriceCategoryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 300,
+    left: 35,
+  },
+  input_width50: {
+    width: '50%',
     borderWidth: 1,
-    width: 100,
-    marginTop: 10,
+    borderColor: 'transparent',
     padding: 10,
     backgroundColor: "white",
-    alignItems: "left",
     borderRadius: 20,
+    marginTop: 10,
+    marginLeft: 10,
   },
   description: {
-    height: 150,
-    borderColor: "gray",
+    borderColor: "transparent",
     borderWidth: 1,
     width: 300,
+    height: 300,
     marginTop: 10,
     padding: 10,
     backgroundColor: "white",
     borderRadius: 20,
+    marginLeft: 42,
   },
   createPostButton: {
-    backgroundColor: "#0000FF",
+    backgroundColor: "#4682B4",
     padding: 10,
     borderRadius: 20,
     marginTop: 10,
+    width: 300,
+    marginLeft: 42,
   },
   createPostButtonText: {
     fontSize: 16,
-    color: "white",
+    color: "white", 
+    textAlign: 'center',  
   },
   backgroundWhite: {
-    backgroundColor: "white",
+    backgroundColor: "#F505205",
   },
 });
 

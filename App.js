@@ -9,6 +9,7 @@ import PostDetails from "./src/screens/PostDetails";
 import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
 import ChatRoom from "./src/screens/ChatRoomPage";
+import { Text, View, StyleSheet } from "react-native";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,16 +27,76 @@ function App() {
           name="Main"
           component={MainPage}
         />
+        
+        <Stack.Screen 
+          name="Edit" 
+          component={EditPage}
+          options={{
+            title: 'Edit',
+            headerStyle: {
+              backgroundColor: '#000000',
+            },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+        
+        <Stack.Screen 
+          name="Details" 
+          component={PostDetails}
+          options={{
+            title: 'Job Details',
+            headerStyle: {
+              backgroundColor: '#000000',
+            },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        
+        />
+        <Stack.Screen 
+          name="ChatRoom" 
+          component={ChatRoom}
+          options={{
+            title: 'Conversation',
+            headerStyle: {
+              backgroundColor: '#000000',
+            },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }} 
+        />
+
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Profile" component={ProfilePage} />
-        <Stack.Screen name="Edit" component={EditPage} />
         <Stack.Screen name="Reset" component={ResetPage} />
-        <Stack.Screen name="Details" component={PostDetails} />
         <Stack.Screen name="Chat" component={Chat} />
-        <Stack.Screen name="ChatRoom" component={ChatRoom} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+
+  headerLeft: {   
+    flexDirection: "row",
+    alignItems: "flex-end",
+    margin: '10px'
+  },
+
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: '#FFFFFF',
+    
+  },
+});
 
 export default App;

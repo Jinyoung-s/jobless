@@ -53,7 +53,8 @@ const Login = () => {
           style={styles.image}
           source={require("../assets/Official-Jobless-logo-updated.png")}
         />
-        <TextInput
+        <Input
+          email
           style={styles.input}
           value={email}
           onChangeText={(text) => setEmail(text)}
@@ -81,16 +82,16 @@ const Login = () => {
         >
           Login
         </Button>
-        <Text>
+        <Text color='#FFFFFF'>
           Forgot Password?
           <TouchableOpacity onPress={handleReset}>
-            <Text color="#4169E1"> Reset</Text>
+          <Text style={{ color: '#4169E1', fontWeight: 'bold' }}> Reset</Text>
           </TouchableOpacity>
         </Text>
-        <Text>
+        <Text color='#FFFFFF'>
           Don't have an account yet?
           <TouchableOpacity onPress={handleRegister}>
-            <Text color="#4169E1"> Register</Text>
+          <Text style={{ color: '#4169E1', fontWeight: 'bold' }}> Register</Text>
           </TouchableOpacity>
         </Text>
       </View>
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "#000000",
   },
   image: {
     height: 200,
@@ -123,20 +124,23 @@ const styles = StyleSheet.create({
     width: 250,
     height: 50,
     borderRadius: 25,
-    padding: 10,
-    marginBottom: 10,
-    borderColor: "gray",
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
+    borderColor: "transparent",
   },
   passwordinput: {
     width: 250,
     height: 50,
     borderRadius: 25,
+    borderWidth: 1,
+    borderColor: "transparent",
   },
   loginButton: {
     backgroundColor: "#0000FF",
     padding: 10,
-    borderRadius: 20,
+    width: 250,
+    height: 50,
+    borderRadius: 25,
     marginTop: 10,
     borderColor: "transparent",
     borderRadius: 50,
@@ -148,9 +152,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 5,
     elevation: 5,
-
     borderWidth: 1,
-    borderRadius: 20,
   },
 });
 
