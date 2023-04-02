@@ -6,7 +6,6 @@ import { db, auth, storage } from "../../firebaseConfig";
 import { getDocs, collection, query, where } from "firebase/firestore"; 
 import { Ionicons } from "@expo/vector-icons";
 import defaultImage from '../assets/default-image.png';
-import { ref, getDownloadURL } from "firebase/storage";
 
 function App ({navigation}) {
   const [profileImg, setprofileImg] = useState("");
@@ -24,8 +23,7 @@ function App ({navigation}) {
       const q = query(collection(db, "users"), where("uid", "==", userId));
       getDocs(q).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          setUser(prevState => ({...prevState, ...doc.data()}));
-          // console.log(doc.data());    
+          setUser(prevState => ({...prevState, ...doc.data()})); 
         });
 
       });
@@ -34,14 +32,16 @@ function App ({navigation}) {
       const qu = query(collection(db, "profileimages"), where("owner", "==", userId));
       getDocs(qu).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          setprofileImg(doc.data().imageURI);
-          console.log(doc.data());    
+          setprofileImg(doc.data().imageURI);  
         });
-
+        
       });
     } catch (e) {
       console.error("Error getting document: ", e);
     }
+
+    
+
   };
 
   const handleLogout = () => {
@@ -67,7 +67,7 @@ function App ({navigation}) {
         getUserData();  
       } 
     });
-    return () => unsubscribe();
+    return () => unsubscribe();   
   }, []);
 
   const styles = StyleSheet.create({
@@ -75,7 +75,7 @@ function App ({navigation}) {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor:"white"
+      backgroundColor: "#F505205",
     },
     
     editProf: {
@@ -108,7 +108,7 @@ function App ({navigation}) {
       <Text size={20}><Ionicons name="egg" size={20} color="black"/> {user.birthdate}</Text>
       
       {/* Add any other relevant data */}
-      <Button style={styles.editProf} round size="small" color="#0000FF" onPress={editProfile}>
+      <Button style={styles.editProf} round size="small" color="#4682B4" onPress={editProfile}>
           Edit Profile
       </Button>
       <Button style={styles.signOut} round size="small" color="#FF4500" onPress={handleLogout}>

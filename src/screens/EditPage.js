@@ -35,6 +35,7 @@ function App ({navigation}) {
     const [newPasswordError, setNewPasswordError] = useState('');
     const [confirmNewPasswordError, setConfirmNewPasswordError] = useState('');
     const [profileImg, setprofileImg] = useState("");
+    const [imgSuccessUpload, setImgSuccessUpload] = useState("");
 
     useEffect(() => {
       const userId = auth.currentUser.uid;
@@ -43,15 +44,12 @@ function App ({navigation}) {
             getDocs(qu).then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 setprofileImg(doc.data().imageURI);
-                console.log(doc.data());    
               });
       
             });
     }, []);
 
     const handleUpdate = () => {
-
-    postImage();
 
     if (!isValidFirstName(firstName)) {
       setFirstNameError("Invalid First Name");
@@ -77,25 +75,29 @@ function App ({navigation}) {
 
   };
 
-  const postImage = async () => {
+  const postImage = async (result) => {
+    
+    if (!result) {
+      return;
+    }
 
     const userid = auth.currentUser.uid;
     const storageRef = ref(storage, `userImages/IMG-${userid}`);
 
     try {
-      const snapshot = await uploadBytes(storageRef, image.uri);
+      const snapshot = await uploadBytes(storageRef, result.uri);
       console.log("Image uploaded successfully");
       const downloadURL = await getDownloadURL(snapshot.ref);
 
       const postData = {
         created: new Date(),
-        imageURI: image.uri,
+        imageURI: result.uri,
         imageURL: downloadURL,
         owner: userid,
       };
 
-      console.log(userid);
       saveDataWithId("profileimages", postData, userid);
+      setprofileImg(result.uri);
       
     } catch (error) {
       console.log("Error uploading image: ", error);
@@ -141,7 +143,20 @@ function App ({navigation}) {
 
     if (!result.canceled) {
       setImage(result);
+      postImage(result);
     }
+
+    if (postImage(result)){
+      setImgSuccessUpload("Image Uploaded!")
+    } else {
+      setImgSuccessUpload("");
+    }
+    
+    //navigation.navigate("Profile");
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: 'Profile', key: 'Profile' }],
+    // });
   };
 
   
@@ -254,7 +269,12 @@ function App ({navigation}) {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor:"white"
+      backgroundColor: "#F505205",
+    },
+    resetPasswordContainer: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
     },
     containerImage: {
       flex: 1,
@@ -334,6 +354,15 @@ function App ({navigation}) {
           </View>
         </TouchableOpacity>
 
+        {imgSuccessUpload !== "" && (
+          <Text color = "#191970" style={{
+                  fontSize: 18,
+                  fontWeight: 700,
+                  position: "absolute",
+                  bottom: 420,
+                }}>{imgSuccessUpload}</Text>
+              )}
+
         <TouchableOpacity onPress={showDialog}>
           <Text color="#4B0082"
                 style={{
@@ -343,7 +372,7 @@ function App ({navigation}) {
         </TouchableOpacity>
 
         <Modal visible={isModalVisible} animationType="slide">
-          <View style={styles.container}>
+          <View style={[styles.resetPasswordContainer, { backgroundColor: "#E8ECED"}]}>
             <Text style={{ fontSize: 20 }}>Reset Password</Text>
             <Input password viewPass
               style={styles.passwordinput}
@@ -382,7 +411,7 @@ function App ({navigation}) {
             )}
 
             <View style={{ flexDirection: 'row', marginTop: 20 }}>
-              <Button style={{ backgroundColor: "#0000FF"}} round size="small" onPress={handlePassUpdateVal}>Save</Button> 
+              <Button style={{ backgroundColor: "#4682B4"}} round size="small" onPress={handlePassUpdateVal}>Save</Button> 
               <Button style={{ backgroundColor: "#808080"}} round size="small" onPress={handleCancel}>Cancel</Button>
             </View>
           </View>
@@ -419,7 +448,7 @@ function App ({navigation}) {
           <Text color = "red">{birthDateError}</Text>
         )}
 
-        <Button round size="small" color="#0000FF" onPress={handleUpdate}>
+        <Button round size="small" color="#4682B4" onPress={handleUpdate}>
           Update
         </Button>
 
