@@ -8,7 +8,7 @@ import EditPage from "./src/screens/EditPage";
 import PostDetails from "./src/screens/PostDetails";
 import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
-import ChatRoom from "./src/screens/ChatRoomPage";
+import Conversation from "./src/screens/ChatRoomPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +32,7 @@ function App() {
         <Stack.Screen name="Reset" component={ResetPage} />
         <Stack.Screen name="Details" component={PostDetails} />
         <Stack.Screen name="Chat" component={Chat} />
-        <Stack.Screen name="ChatRoom" component={ChatRoom} />
+        <Stack.Screen name="Conversation" component={Conversation} />
       </Stack.Navigator>
     </NavigationContainer>
   );
