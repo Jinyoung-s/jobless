@@ -70,12 +70,10 @@ function TabNavigator() {
         tabBarInactiveTintColor: "#000000",
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomePage}
-        options={{
-          headerStyle: { backgroundColor: "#0000FF" }, // replace with your desired color
-        }}
+      <Tab.Screen name="Home" component={HomePage} 
+      options={{
+        headerStyle: { backgroundColor: '#0000FF' }, // replace with your desired color
+      }} 
       />
       <Tab.Screen name="Post" component={PostPage} />
       <Tab.Screen name="Chats" component={ChatsPage} />
