@@ -291,11 +291,12 @@ function App ({navigation}) {
     textInput: {
       height: 40,
       width: "80%",
-      borderColor: "gray",
+      borderColor: "transparent",
       borderWidth: 1,
       padding: 10,
       margin: 10,
-      borderRadius:20
+      borderRadius:20,
+      backgroundColor: "white",
     },
     profilePicture: {
       width: 200,
@@ -317,7 +318,9 @@ function App ({navigation}) {
     passwordinput:{
       width:250,
       height:50,
-      borderRadius:25
+      borderRadius:25,
+      borderColor: 'transparent',
+      backgroundColor: "white",
     },
   });
 

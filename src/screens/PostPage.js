@@ -1,8 +1,3 @@
-/**
- * the page for creating a post
- * 2/13/2023 created - jys
- * 2/23/2023 modified - jys
- */
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -69,29 +64,32 @@ function App({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.backgroundWhite}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View>
-        <Image source={defaultImage} style={styles.addpostPicture} />
+        <View style={styles.pictureContainer}>
+          <Image source={defaultImage} style={styles.addpostPicture} resizeMode="contain"/>
+        </View>
         <View style={styles.containerImage}>
           {image && (
             <Image source={{ uri: image.uri }} style={styles.previewImage} />
           )}
         </View>
+
         <TouchableOpacity
-          style={styles.chooseImageButton}
+          style={[styles.chooseImageButton, styles.containerCa]}
           onPress={handleChooseImage}
         >
-          <View style={styles.containerCa}>
-            <MaterialIcons name="camera-alt" size={30} color="black" />
-          </View>
+          <MaterialIcons name="camera-alt" size={30} color="black" />
         </TouchableOpacity>
 
-        <TextInput
-          style={styles.input_title}
-          placeholder="Title"
-          onChangeText={(text) => setTitle(text)}
-          value={title}
-        />
+        <View>
+          <TextInput
+            style={styles.input_title}
+            placeholder="Title"
+            onChangeText={(text) => setTitle(text)}
+            value={title}
+          />
+        </View>
 
         <View style={styles.inputPriceCategoryContainer}>
           <TextInput
@@ -108,14 +106,17 @@ function App({ navigation }) {
           />
         </View>
 
-        <TextInput
-          style={styles.description}
-          multiline={true}
-          numberOfLines={100}
-          placeholder="Description"
-          onChangeText={(text) => setDescription(text)}
-          value={description}
-        />
+        <View>
+          <TextInput
+            style={styles.description}
+            multiline={true}
+            numberOfLines={100}
+            placeholder="Description"
+            onChangeText={(text) => setDescription(text)}
+            value={description}
+          />
+        </View>
+
         <TouchableOpacity
           style={styles.createPostButton}
           onPress={handleCreatePost}
@@ -124,10 +125,6 @@ function App({ navigation }) {
         </TouchableOpacity>
 
       </View>
-
-      {/* <View style={styles.container}>
-        
-      </View> */}
     </ScrollView>
   );
 }
@@ -135,107 +132,103 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#F505205",
+    padding: 20,   
   },
-  containerCa: {
-    position: "absolute",
-    bottom: 105,
-    left: 50,
-    backgroundColor: "#D3D3D3",
-    padding: 10,
-    borderRadius: 20,
-    borderColor: "black",
-    borderWidth: 1,
-  },
-  containerImage: {
-    flex: 1,
-    alignItems: "center",
-  },
-  inputContainer: {
-    width: 300,
-    alignItems: "center",
-  },
-  chooseImageButton: {
-    backgroundColor: "#white",
-    padding: 10,
-    borderRadius: 5,
-    left: 180,
-  },
-  chooseImageButtonText: {
-    fontSize: 16,
-    color: "white",
-  },
-  previewImage: {
-    position: "absolute",
-    width: 200,
-    height: 200,
-    bottom: 80,
-    marginTop: 50,
-    borderRadius: 10,
+  pictureContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
   addpostPicture: {
-    width: 190,
+    width: 200,
     height: 200,
     borderRadius: 10,
-    marginBottom: 80,
-    marginTop: 50,
-    left: 100,
+    borderColor: 'black',
+    backgroundColor: '#FFFFFF',
+  },
+  containerImage: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  previewImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 10,
+  },
+  chooseImageButton: {
+    backgroundColor: 'red',
+    borderRadius: 20,
+    width: 50,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  containerCa: {
+    position: 'absolute',
+    bottom: 394,
+    right: 80,
+    backgroundColor: '#D3D3D3',
+    borderRadius: 15,
+    borderColor: '#4682B4',
+    borderWidth: 2,
+    padding: 5,
   },
   input_title: {
-    borderColor: "transparent",
+    width: '100%',
+    borderColor: 'transparent',
     borderWidth: 1,
-    width: 300,
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "white",
     borderRadius: 20,
-    marginLeft: 42,
+    backgroundColor: "white",
+    padding: 10,
+    marginBottom: 20,
   },
   inputPriceCategoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    width: 300,
-    left: 35,
+    marginBottom: 20,
   },
   input_width50: {
-    width: '50%',
-    borderWidth: 1,
+    width: '48%',
     borderColor: 'transparent',
-    padding: 10,
-    backgroundColor: "white",
+    borderWidth: 1,
     borderRadius: 20,
-    marginTop: 10,
-    marginLeft: 10,
+    backgroundColor: "white",
+    padding: 10,
   },
   description: {
-    borderColor: "transparent",
+    width: '100%',
+    borderColor: 'transparent',
     borderWidth: 1,
-    width: 300,
-    height: 300,
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: "white",
     borderRadius: 20,
-    marginLeft: 42,
+    backgroundColor: "white",
+    padding: 10,
+    height: 200,
+    textAlignVertical: 'top',
+    marginBottom: 20,
   },
   createPostButton: {
-    backgroundColor: "#4682B4",
-    padding: 10,
-    borderRadius: 20,
-    marginTop: 10,
-    width: 300,
-    marginLeft: 42,
+    backgroundColor: '#4682B4',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 30,
   },
   createPostButtonText: {
-    fontSize: 16,
-    color: "white", 
-    textAlign: 'center',  
-  },
-  backgroundWhite: {
-    backgroundColor: "#F505205",
-  },
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    },
+  
+  containerMargins: {
+    marginHorizontal: 20,
+    },
 });
 
 export default App;

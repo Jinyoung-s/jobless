@@ -146,16 +146,17 @@ function App() {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor:"white"
+      backgroundColor:"#F505205"
     },
     textInput: {
       height: 40,
       width: "80%",
-      borderColor: "gray",
+      borderColor: "transparent",
       borderWidth: 1,
       padding: 10,
       margin: 10,
       borderRadius: 20,
+      backgroundColor: '#FFFFFF',
     },
     image:{
       height:150,
@@ -250,7 +251,7 @@ function App() {
           <Text color = "red">{birthDateError}</Text>
         )}
 
-        <Button round style={styles.button} size="small" color="#0000FF" onPress={handleSubmit}>
+        <Button round style={styles.button} size="small" color="#4682B4" onPress={handleSubmit}>
           Submit
         </Button>
 
