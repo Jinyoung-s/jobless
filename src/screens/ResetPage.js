@@ -57,12 +57,13 @@ function App() {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor:"white"
+        backgroundColor:"#F505205"
       },
       textInput: {
         height: 40,
         width: "80%",
-        borderColor: "gray",
+        borderColor: "transparent",
+        backgroundColor: "white",
         borderWidth: 1,
         padding: 10,
         margin: 10,
@@ -98,7 +99,7 @@ function App() {
         {successMessage ? <Text>{successMessage}</Text> : null}
         {errorMessage ? <Text style={styles.errorStyle}>{errorMessage}</Text> : null}
 
-        <Button round size="small" color="#0000FF" onPress={handleResetPassword}>
+        <Button round size="small" color="#4682B4" onPress={handleResetPassword}>
         Submit
         </Button>
 
