@@ -26,6 +26,11 @@ const Tab = createBottomTabNavigator();
 function TabNavigator() {
   let isNew = true;
   const currentUserUid = auth.currentUser.uid;
+  const [profileImg, setprofileImg] = useState("");
+  const [user, setUser] = useState({
+    firstName: "",
+    profilePicture: null,
+  });
 
   useEffect(() => {
     const chatsCollection = collection(db, "chats");
@@ -33,6 +38,29 @@ function TabNavigator() {
       chatsCollection,
       where("post_owner", "==", currentUserUid)
     );
+
+    // get the name of the current user
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
+    getDocs(q).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setUser((prevState) => ({ ...prevState, ...doc.data() }));
+      });
+    });
+
+    // Get the user URI from storage
+    const qu = query(
+      collection(db, "profileimages"),
+      where("owner", "==", auth.currentUser.uid)
+    );
+    getDocs(qu).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setprofileImg(doc.data().imageURI);
+        console.log(doc.data().imageURI);
+      });
+    });
 
     const unsub = onSnapshot(chatMessagesQuery1, (querySnapshot) => {
       querySnapshot.forEach((doc) => {});
@@ -86,8 +114,15 @@ function TabNavigator() {
           headerTitle: "Home",
           headerTitleAlign: "center",
           headerLeft: () => (
-            <View style={styles.headerLeft}>
-              <Text style={[styles.headerText]}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
+            <View style={[styles.headerLeft, { flexDirection: "column" }]}>
+              <Text style={styles.headerText}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
+              <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
+                {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
+                {profileImg ? (
+                  <Image source={{ uri: profileImg }} style={styles.avatar} />
+                ) : null}
+                <Text style={styles.headerText}>{user.firstName}</Text>
+              </View>
             </View>
           ),
           tabBarLabel: ({ focused }) => (
@@ -226,19 +261,30 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "flex-end",
     borderColor: "red",
-    marginRight: "20px",
+    marginRight: 20,
   },
 
   headerLeft: {
     flexDirection: "row",
     alignItems: "flex-end",
-    margin: "10px",
+    margin: 10,
   },
 
   headerText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#FFFFFF",
+  },
+
+  avatarContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    marginRight: 5,
+    borderRadius: 5,
   },
 });
 

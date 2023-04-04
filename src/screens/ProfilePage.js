@@ -19,6 +19,7 @@ function App({ navigation }) {
 
   const getUserData = async () => {
     try {
+      // get the name of the current user
       const userId = auth.currentUser.uid;
       const q = query(collection(db, "users"), where("uid", "==", userId));
       getDocs(q).then((querySnapshot) => {
@@ -32,6 +33,7 @@ function App({ navigation }) {
         collection(db, "profileimages"),
         where("owner", "==", userId)
       );
+
       getDocs(qu).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setprofileImg(doc.data().imageURI);
