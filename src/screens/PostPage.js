@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Picker,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storage, auth } from "../../firebaseConfig";
@@ -35,16 +36,19 @@ function App({ navigation }) {
   const handleCreatePost = async () => {
     let today = new Date();
 
+    const response = await fetch(image.uri);
+    const blob = await response.blob();
+
     const storageRef = ref(storage, `postImages/IMG${today.getTime()}`);
     const userData = await getUserData(auth.currentUser.uid);
     try {
-      const snapshot = await uploadBytes(storageRef, image.uri);
+      const snapshot = await uploadBytes(storageRef, blob);
       console.log("Image uploaded successfully");
       const downloadURL = await getDownloadURL(snapshot.ref);
 
       const postData = {
         title: title,
-        image: image.uri,
+        image: downloadURL,
         description,
         price,
         category,
@@ -67,7 +71,11 @@ function App({ navigation }) {
     <ScrollView contentContainerStyle={styles.container}>
       <View>
         <View style={styles.pictureContainer}>
-          <Image source={defaultImage} style={styles.addpostPicture} resizeMode="contain"/>
+          <Image
+            source={defaultImage}
+            style={styles.addpostPicture}
+            resizeMode="contain"
+          />
         </View>
         <View style={styles.containerImage}>
           {image && (
@@ -98,12 +106,50 @@ function App({ navigation }) {
             onChangeText={(text) => setPrice(text)}
             value={price}
           />
-          <TextInput
+
+          <Picker
             style={styles.input_width50}
-            placeholder="Category"
-            onChangeText={(text) => setCategory(text)}
-            value={category}
-          />
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          >
+            <Picker.Item label="Accountant" value="Accountant" />
+            <Picker.Item
+              label="Advertising executive"
+              value="Advertising executive"
+            />
+            <Picker.Item label="Architect" value="Architect" />
+            <Picker.Item label="Attorney/Lawyer" value="Attorney/Lawyer" />
+            <Picker.Item label="Banker" value="Banker" />
+            <Picker.Item label="Business analyst" value="Business analyst" />
+            <Picker.Item label="Consultant" value="Consultant" />
+            <Picker.Item
+              label="Customer service representative"
+              value="Customer service representative"
+            />
+            <Picker.Item label="Data analyst" value="Data analyst" />
+            <Picker.Item
+              label="Database administrator"
+              value="Database administrator"
+            />
+            <Picker.Item label="Economist" value="Economist" />
+            <Picker.Item label="Editor" value="Editor" />
+            <Picker.Item label="Financial advisor" value="Financial advisor" />
+            <Picker.Item
+              label="Human resources manager"
+              value="Human resources manager"
+            />
+            <Picker.Item label="Journalist" value="Journalist" />
+            <Picker.Item label="Farmer" value="Farmer" />
+            <Picker.Item label="Assembler" value="Assembler" />
+            <Picker.Item label="Web developer" value="Web developer" />
+            <Picker.Item label="Teacher" value="Teacher" />
+            <Picker.Item label="Electrician" value="Electrician" />
+            <Picker.Item label="Janitor" value="Janitor" />
+            <Picker.Item label="Plumber" value="Plumber" />
+            <Picker.Item label="Roofer" value="Roofer" />
+            <Picker.Item label="Warehouse worker" value="Warehouse worker" />
+            <Picker.Item label="Truck driver" value="Truck driver" />
+          </Picker>
         </View>
 
         <View>
@@ -123,7 +169,6 @@ function App({ navigation }) {
         >
           <Text style={styles.createPostButtonText}>Create Post</Text>
         </TouchableOpacity>
-
       </View>
     </ScrollView>
   );
@@ -132,29 +177,29 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#F505205",
-    padding: 20,   
+    padding: 20,
   },
   pictureContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   addpostPicture: {
     width: 200,
     height: 200,
     borderRadius: 10,
-    borderColor: 'black',
-    backgroundColor: '#FFFFFF',
+    borderColor: "black",
+    backgroundColor: "#FFFFFF",
   },
   containerImage: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    alignItems: 'center',
+    alignItems: "center",
   },
   previewImage: {
     width: 200,
@@ -162,28 +207,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   chooseImageButton: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     borderRadius: 20,
     width: 50,
     height: 50,
     marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   containerCa: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 394,
     right: 80,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: "#D3D3D3",
     borderRadius: 15,
-    borderColor: '#4682B4',
+    borderColor: "#4682B4",
     borderWidth: 2,
     padding: 5,
   },
   input_title: {
-    width: '100%',
-    borderColor: 'transparent',
+    width: "100%",
+    borderColor: "transparent",
     borderWidth: 1,
     borderRadius: 20,
     backgroundColor: "white",
@@ -191,44 +236,44 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputPriceCategoryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   input_width50: {
-    width: '48%',
-    borderColor: 'transparent',
+    width: "48%",
+    borderColor: "transparent",
     borderWidth: 1,
     borderRadius: 20,
     backgroundColor: "white",
     padding: 10,
   },
   description: {
-    width: '100%',
-    borderColor: 'transparent',
+    width: "100%",
+    borderColor: "transparent",
     borderWidth: 1,
     borderRadius: 20,
     backgroundColor: "white",
     padding: 10,
     height: 200,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     marginBottom: 20,
   },
   createPostButton: {
-    backgroundColor: '#4682B4',
+    backgroundColor: "#4682B4",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 30,
   },
   createPostButtonText: {
-    color: 'white',
-    textAlign: 'center',
+    color: "white",
+    textAlign: "center",
     fontSize: 20,
-    },
-  
+  },
+
   containerMargins: {
     marginHorizontal: 20,
-    },
+  },
 });
 
 export default App;

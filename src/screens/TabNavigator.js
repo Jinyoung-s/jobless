@@ -30,7 +30,7 @@ function TabNavigator() {
   const [user, setUser] = useState({
     firstName: "",
     profilePicture: null,
-  }); 
+  });
 
   useEffect(() => {
     const chatsCollection = collection(db, "chats");
@@ -40,25 +40,30 @@ function TabNavigator() {
     );
 
     // get the name of the current user
-    const q = query(collection(db, "users"), where("uid", "==", auth.currentUser.uid));
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
     getDocs(q).then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        setUser(prevState => ({...prevState, ...doc.data()})); 
+        setUser((prevState) => ({ ...prevState, ...doc.data() }));
       });
     });
 
-      // Get the user URI from storage
-    const qu = query(collection(db, "profileimages"), where("owner", "==", auth.currentUser.uid));
+    // Get the user URI from storage
+    const qu = query(
+      collection(db, "profileimages"),
+      where("owner", "==", auth.currentUser.uid)
+    );
     getDocs(qu).then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        setprofileImg(doc.data().imageURI);  
+        setprofileImg(doc.data().imageURI);
         console.log(doc.data().imageURI);
-      });    
+      });
     });
 
     const unsub = onSnapshot(chatMessagesQuery1, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-      });
+      querySnapshot.forEach((doc) => {});
     });
     return () => unsub();
   }, []);
@@ -89,44 +94,48 @@ function TabNavigator() {
         },
         tabBarActiveTintColor: "#4682B4",
         tabBarInactiveTintColor: "#FFFFFF",
-        tabBarStyle: { 
-          backgroundColor: '#000000',
-          height: 55 
+        tabBarStyle: {
+          backgroundColor: "#000000",
+          height: 55,
         },
       })}
     >
-
-      <Tab.Screen name="Home" component={HomePage} 
+      <Tab.Screen
+        name="Home"
+        component={HomePage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Home',
-          headerTitleAlign: 'center',        
+            fontWeight: "bold",
+          },
+          headerTitle: "Home",
+          headerTitleAlign: "center",
           headerLeft: () => (
-            <View style={[styles.headerLeft, {flexDirection: "column"}]}>
+            <View style={[styles.headerLeft, { flexDirection: "column" }]}>
               <Text style={styles.headerText}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
-              <View style={[styles.avatarContainer, {flexDirection: "row"}]}>
+              <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
                 {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
                 {profileImg ? (
                   <Image source={{ uri: profileImg }} style={styles.avatar} />
-                ) : null
-                }
+                ) : null}
                 <Text style={styles.headerText}>{user.firstName}</Text>
               </View>
             </View>
           ),
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Home</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Home
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -138,24 +147,30 @@ function TabNavigator() {
         }}
       />
 
-      <Tab.Screen name="Post" component={PostPage} 
+      <Tab.Screen
+        name="Post"
+        component={PostPage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Post',
-          headerTitleAlign: 'center',
+            fontWeight: "bold",
+          },
+          headerTitle: "Post",
+          headerTitleAlign: "center",
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Post</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Post
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -167,24 +182,30 @@ function TabNavigator() {
         }}
       />
 
-      <Tab.Screen name="Chats" component={ChatsPage} 
+      <Tab.Screen
+        name="Chats"
+        component={ChatsPage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Chats',
-          headerTitleAlign: 'center',
+            fontWeight: "bold",
+          },
+          headerTitle: "Chats",
+          headerTitleAlign: "center",
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Chats</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Chats
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -196,24 +217,30 @@ function TabNavigator() {
         }}
       />
 
-      <Tab.Screen name="Profile" component={ProfilePage} 
+      <Tab.Screen
+        name="Profile"
+        component={ProfilePage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Profile',
-          headerTitleAlign: 'center',
+            fontWeight: "bold",
+          },
+          headerTitle: "Profile",
+          headerTitleAlign: "center",
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Profile</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Profile
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -234,26 +261,24 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "flex-end",
     borderColor: "red",
-    marginRight: 20
+    marginRight: 20,
   },
 
-  headerLeft: {   
+  headerLeft: {
     flexDirection: "row",
     alignItems: "flex-end",
-    margin: 10
+    margin: 10,
   },
 
   headerText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: '#FFFFFF',
-    
+    color: "#FFFFFF",
   },
 
   avatarContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    
+    justifyContent: "center",
+    alignItems: "center",
   },
   avatar: {
     width: 30,

@@ -119,7 +119,7 @@ function App({ navigation }) {
         title={item.title}
         caption={
           item.description.length > 40
-            ? item.description.slice(0, 40) + "..."
+            ? item.description.split("\n")[0].slice(0, 40) + "..."
             : item.description
         }
         avatar={item.profileImg ? item.profileImg : defaultImage}
