@@ -35,8 +35,7 @@ function TabNavigator() {
     );
 
     const unsub = onSnapshot(chatMessagesQuery1, (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-      });
+      querySnapshot.forEach((doc) => {});
     });
     return () => unsub();
   }, []);
@@ -67,65 +66,41 @@ function TabNavigator() {
         },
         tabBarActiveTintColor: "#4682B4",
         tabBarInactiveTintColor: "#FFFFFF",
-        tabBarStyle: { 
-          backgroundColor: '#000000',
-          height: 55 
+        tabBarStyle: {
+          backgroundColor: "#000000",
+          height: 55,
         },
       })}
     >
-
-      <Tab.Screen name="Home" component={HomePage} 
+      <Tab.Screen
+        name="Home"
+        component={HomePage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Home',
-          headerTitleAlign: 'center',        
+            fontWeight: "bold",
+          },
+          headerTitle: "Home",
+          headerTitleAlign: "center",
           headerLeft: () => (
             <View style={styles.headerLeft}>
-              <Text style={[styles.headerText, {fontFamily: 'cursive'}]}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
+              <Text style={[styles.headerText]}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
             </View>
           ),
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Home</Text>
-            </View>
-          ),
-          headerRight: () => (
-            <Image
-              style={styles.tabBarIcon}
-              source={require("../assets/Official-Jobless-logo-updated.png")}
-            />
-          ),
-        }}
-      />
-
-      <Tab.Screen name="Post" component={PostPage} 
-        options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
-          headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Post',
-          headerTitleAlign: 'center',
-          tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Post</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Home
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -137,24 +112,30 @@ function TabNavigator() {
         }}
       />
 
-      <Tab.Screen name="Chats" component={ChatsPage} 
+      <Tab.Screen
+        name="Post"
+        component={PostPage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Chats',
-          headerTitleAlign: 'center',
+            fontWeight: "bold",
+          },
+          headerTitle: "Post",
+          headerTitleAlign: "center",
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Chats</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Post
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -166,24 +147,65 @@ function TabNavigator() {
         }}
       />
 
-      <Tab.Screen name="Profile" component={ProfilePage} 
+      <Tab.Screen
+        name="Chats"
+        component={ChatsPage}
         options={{
-          headerStyle: { 
-            backgroundColor: '#000000' 
-          }, 
-          headerTintColor: '#FFFFFF',
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
           headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          headerTitle: 'Profile',
-          headerTitleAlign: 'center',
+            fontWeight: "bold",
+          },
+          headerTitle: "Chats",
+          headerTitleAlign: "center",
           tabBarLabel: ({ focused }) => (
-            <View style={{ 
-              flex: 1, 
-              alignItems: 'center', 
-              justifyContent: 'center' 
-            }}>
-              <Text style={{ color: focused ? '#FFFFFF' : '#CCCCCC' }}>Profile</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Chats
+              </Text>
+            </View>
+          ),
+          headerRight: () => (
+            <Image
+              style={styles.tabBarIcon}
+              source={require("../assets/Official-Jobless-logo-updated.png")}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={ProfilePage}
+        options={{
+          headerStyle: {
+            backgroundColor: "#000000",
+          },
+          headerTintColor: "#FFFFFF",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitle: "Profile",
+          headerTitleAlign: "center",
+          tabBarLabel: ({ focused }) => (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+                Profile
+              </Text>
             </View>
           ),
           headerRight: () => (
@@ -204,20 +226,19 @@ const styles = StyleSheet.create({
     width: 50,
     alignItems: "flex-end",
     borderColor: "red",
-    marginRight:"20px"
+    marginRight: "20px",
   },
 
-  headerLeft: {   
+  headerLeft: {
     flexDirection: "row",
     alignItems: "flex-end",
-    margin: '10px'
+    margin: "10px",
   },
 
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: '#FFFFFF',
-    
+    color: "#FFFFFF",
   },
 });
 

@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Picker,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storage, auth } from "../../firebaseConfig";
@@ -40,16 +41,19 @@ function App({ navigation }) {
   const handleCreatePost = async () => {
     let today = new Date();
 
+    const response = await fetch(image.uri);
+    const blob = await response.blob();
+
     const storageRef = ref(storage, `postImages/IMG${today.getTime()}`);
     const userData = await getUserData(auth.currentUser.uid);
     try {
-      const snapshot = await uploadBytes(storageRef, image.uri);
+      const snapshot = await uploadBytes(storageRef, blob);
       console.log("Image uploaded successfully");
       const downloadURL = await getDownloadURL(snapshot.ref);
 
       const postData = {
         title: title,
-        image: image.uri,
+        image: downloadURL,
         description,
         price,
         category,
@@ -100,12 +104,50 @@ function App({ navigation }) {
             onChangeText={(text) => setPrice(text)}
             value={price}
           />
-          <TextInput
+
+          <Picker
             style={styles.input_width50}
-            placeholder="Category"
-            onChangeText={(text) => setCategory(text)}
-            value={category}
-          />
+            selectedValue={category}
+            onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
+          >
+            <Picker.Item label="Accountant" value="Accountant" />
+            <Picker.Item
+              label="Advertising executive"
+              value="Advertising executive"
+            />
+            <Picker.Item label="Architect" value="Architect" />
+            <Picker.Item label="Attorney/Lawyer" value="Attorney/Lawyer" />
+            <Picker.Item label="Banker" value="Banker" />
+            <Picker.Item label="Business analyst" value="Business analyst" />
+            <Picker.Item label="Consultant" value="Consultant" />
+            <Picker.Item
+              label="Customer service representative"
+              value="Customer service representative"
+            />
+            <Picker.Item label="Data analyst" value="Data analyst" />
+            <Picker.Item
+              label="Database administrator"
+              value="Database administrator"
+            />
+            <Picker.Item label="Economist" value="Economist" />
+            <Picker.Item label="Editor" value="Editor" />
+            <Picker.Item label="Financial advisor" value="Financial advisor" />
+            <Picker.Item
+              label="Human resources manager"
+              value="Human resources manager"
+            />
+            <Picker.Item label="Journalist" value="Journalist" />
+            <Picker.Item label="Farmer" value="Farmer" />
+            <Picker.Item label="Assembler" value="Assembler" />
+            <Picker.Item label="Web developer" value="Web developer" />
+            <Picker.Item label="Teacher" value="Teacher" />
+            <Picker.Item label="Electrician" value="Electrician" />
+            <Picker.Item label="Janitor" value="Janitor" />
+            <Picker.Item label="Plumber" value="Plumber" />
+            <Picker.Item label="Roofer" value="Roofer" />
+            <Picker.Item label="Warehouse worker" value="Warehouse worker" />
+            <Picker.Item label="Truck driver" value="Truck driver" />
+          </Picker>
         </View>
 
         <TextInput
@@ -122,7 +164,6 @@ function App({ navigation }) {
         >
           <Text style={styles.createPostButtonText}>Create Post</Text>
         </TouchableOpacity>
-
       </View>
 
       {/* <View style={styles.container}>
@@ -193,16 +234,16 @@ const styles = StyleSheet.create({
     marginLeft: 42,
   },
   inputPriceCategoryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     width: 300,
     left: 35,
   },
   input_width50: {
-    width: '50%',
+    width: "50%",
     borderWidth: 1,
-    borderColor: 'transparent',
+    borderColor: "transparent",
     padding: 10,
     backgroundColor: "white",
     borderRadius: 20,
@@ -230,8 +271,8 @@ const styles = StyleSheet.create({
   },
   createPostButtonText: {
     fontSize: 16,
-    color: "white", 
-    textAlign: 'center',  
+    color: "white",
+    textAlign: "center",
   },
   backgroundWhite: {
     backgroundColor: "#F505205",
