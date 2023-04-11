@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Picker } from "@react-native-picker/picker";
 import {
   View,
   Text,
@@ -8,7 +9,6 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  Picker,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { storage, auth } from "../../firebaseConfig";
