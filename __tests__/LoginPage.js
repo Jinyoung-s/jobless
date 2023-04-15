@@ -11,8 +11,8 @@ describe("fetchData function", () => {
 
   it("should fetch data and set state correctly", async () => {
     const itemsData = [
-      { id: 1, title: "Title 1" },
-      { id: 2, title: "Title 2" },
+      { id: 1, title: "check this" },
+      { id: 2, title: "check3 this" },
     ];
     const snapshot = {
       docs: itemsData.map((item) => ({
