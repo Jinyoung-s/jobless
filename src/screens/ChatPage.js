@@ -17,8 +17,6 @@ import {
   onSnapshot,
   arrayUnion,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
-import { connectStorageEmulator } from "firebase/storage";
 
 function Chat({ route, navigation }) {
   const [messages, setMessges] = useState([]);
