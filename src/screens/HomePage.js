@@ -111,86 +111,68 @@ function App({ navigation }) {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => openDetails(item.id)}>
-      <Card
-        flex
-        borderless
-        shadow
-        style={styles.card}
-        title={item.title}
-        caption={
-          item.description.length > 40
-            ? item.description.split("\n")[0].slice(0, 40) + "..."
-            : item.description
-        }
-        avatar={item.profileImg ? item.profileImg : defaultImage}
-        image={item.image}
-        location
-      />
+      <View style={styles.postContainer}>
+        <Image style={styles.postImage} source={{ uri: item.image }} />
+        <View style={styles.postDetails}>
+          <Text style={styles.postTitle}>{item.title}</Text>
+          <Text>
+            {item.description.length > 40
+              ? item.description.split("\n")[0].slice(0, 40) + "..."
+              : item.description}
+          </Text>
+          <Text>{item.price}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 
   return (
-    <FlatList
-      data={items}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.container}
-      onEndReached={fetchMore}
-      onEndReachedThreshold={0.5}
-    />
+    <View>
+      <FlatList
+        data={items}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.container}
+        onEndReached={fetchMore}
+        onEndReachedThreshold={0.5}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: "#F505205",
-  },
-  card: {
-    marginBottom: 20,
-    backgroundColor: "white",
-  },
-  item: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    borderRadius: 4,
-    marginBottom: 16,
-    elevation: 10,
-    borderBottomWidth: 2,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 4,
-    left: 5,
-  },
-  itemDetails: {
     flex: 1,
     padding: 16,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  contents: {
-    fontSize: 14,
-    marginBottom: 8,
-  },
-  bottomRow: {
+  postContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 16,
+    marginBottom: 16,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    padding: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  price: {
+  postImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+  },
+  postDetails: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  postTitle: {
     fontSize: 18,
     fontWeight: "bold",
-  },
-  categoryButton: {
-    backgroundColor: "#4169E1",
-    borderRadius: 50,
-    paddingHorizontal: 16,
+    marginBottom: 8,
   },
 });
 

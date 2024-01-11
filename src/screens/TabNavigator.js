@@ -92,11 +92,12 @@ function TabNavigator() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#4682B4",
-        tabBarInactiveTintColor: "#FFFFFF",
+        tabBarActiveTintColor: "#000000",
+        tabBarInactiveTintColor: "#000000",
         tabBarStyle: {
-          backgroundColor: "#000000",
-          height: 55,
+          backgroundColor: "#FFFFFF",
+          height: 60,
+          padding: 5,
         },
       })}
     >
@@ -105,9 +106,9 @@ function TabNavigator() {
         component={HomePage}
         options={{
           headerStyle: {
-            backgroundColor: "#000000",
+            backgroundColor: "#FFFFFF",
           },
-          headerTintColor: "#FFFFFF",
+          headerTintColor: "#000000",
           headerTitleStyle: {
             fontWeight: "bold",
           },
@@ -115,7 +116,6 @@ function TabNavigator() {
           headerTitleAlign: "center",
           headerLeft: () => (
             <View style={[styles.headerLeft, { flexDirection: "column" }]}>
-              <Text style={styles.headerText}>𝓦𝓮𝓵𝓬𝓸𝓶𝓮</Text>
               <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
                 {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
                 {profileImg ? (
@@ -133,7 +133,7 @@ function TabNavigator() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
                 Home
               </Text>
             </View>
@@ -168,7 +168,7 @@ function TabNavigator() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
                 Post
               </Text>
             </View>
@@ -203,7 +203,7 @@ function TabNavigator() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
                 Chats
               </Text>
             </View>
@@ -238,7 +238,7 @@ function TabNavigator() {
                 justifyContent: "center",
               }}
             >
-              <Text style={{ color: focused ? "#FFFFFF" : "#CCCCCC" }}>
+              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
                 Profile
               </Text>
             </View>
