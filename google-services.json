@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "938814888188",
+    "project_id": "jobless-1ad8f",
+    "storage_bucket": "jobless-1ad8f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938814888188:android:e81823d91f203e6d671f79",
+        "android_client_info": {
+          "package_name": "com.unemployed.jobless"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938814888188-d4ag5uqtpq8fl3psfb92amtul06ccjec.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOYMN0CiXA6kKcqhrt0lo394zav_U8aEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938814888188-d4ag5uqtpq8fl3psfb92amtul06ccjec.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
