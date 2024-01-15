@@ -6,7 +6,6 @@ import React, { useState, useEffect } from "react";
 import { Switch } from 'react-native-switch';
 import Geolocation from 'react-native-geolocation-service';
 import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
-import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -343,8 +342,7 @@ function App() {
           Go back to
           <TouchableOpacity onPress={handleLogin}>
             <Text color="#4169E1"> Login</Text>
-          </TouchableOpacity>
-        </Text>        
+          </TouchableOpacity>        
         </Text>       
       </View>
   );
