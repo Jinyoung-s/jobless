@@ -2,7 +2,10 @@ import { db } from "../../firebaseConfig";
 import { collection, addDoc, doc, setDoc, updateDoc  } from "firebase/firestore"; 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Text } from "galio-framework";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Switch } from 'react-native-switch';
+import Geolocation from 'react-native-geolocation-service';
+import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
 import {
   View,
   TextInput,
@@ -24,6 +27,7 @@ function App() {
   const [passwordError, setPasswordError] = useState("");
   const [birthDateError, setBirthDateError] = useState("");
   const [image, setImage] = useState(null);
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
   // Validator upon clicking the Submit button
   const handleSubmit = () => {
@@ -137,8 +141,31 @@ function App() {
     return regexBirthDate.test(birthdate);
   };
 
+  // Handle Functions
   const handleLogin = () => {
     navigation.navigate("LoginPage");
+  };
+
+  useEffect(() => {
+    if (locationEnabled) {
+      // Request location permission and start tracking
+      Geolocation.getCurrentPosition(
+        (position) => {
+          console.log('Current Position:', position);
+          // Do something with the location data
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      );
+    } else {
+      // Stop tracking or perform any cleanup when location is disabled
+    }
+  }, [locationEnabled]);
+
+  const handleToggle = () => {
+    setLocationEnabled(!locationEnabled);
   };
 
   const styles = StyleSheet.create({
@@ -158,6 +185,30 @@ function App() {
       borderRadius: 20,
       backgroundColor: '#FFFFFF',
     },
+
+    header: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: 'red',
+    },
+
+    headerSub: {
+      flexDirection: 'row-reverse',
+      marginRight: 50,
+    },
+
+    optional: {
+      fontSize: 12,
+      flexDirection: 'row',
+      marginLeft: 50,
+    },
+
+    icon: {
+      marginRight: 5,
+    },
+
+  
+
     image:{
       height:150,
       width:150,
@@ -251,6 +302,33 @@ function App() {
           <Text color = "red">{birthDateError}</Text>
         )}
 
+        
+
+        <View style={styles.header}>
+          <Text style={styles.optional}>(optional)</Text> 
+          <View style={styles.headerSub}> 
+            <Ionicons name="md-help-circle" size={24} color="black" style={styles.icon} />
+            <Ionicons name="md-information-circle" size={24} color="black" style={styles.icon} />
+          </View>
+         
+        </View>
+
+        <Text>
+        Allow app to activate location while using it?
+        </Text>
+
+        <Switch
+          value={locationEnabled}
+          onValueChange={handleToggle}
+          disabled={false}
+          activeText={'Yes'}
+          inActiveText={'No'}
+          backgroundActive={'green'}
+          backgroundInactive={'gray'}
+          circleActiveColor={'#30a566'}
+          circleInActiveColor={'#000000'}
+        />    
+
         <Button round style={styles.button} size="small" color="#4682B4" onPress={handleSubmit}>
           Submit
         </Button>
@@ -258,12 +336,13 @@ function App() {
         <Button round style={styles.button} size="small" color="#FF4500" onPress={handleClear}>
           Clear
         </Button>
+
         
         <Text>
           Go back to
           <TouchableOpacity onPress={handleLogin}>
             <Text color="#4169E1"> Login</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>        
         </Text>       
       </View>
   );
