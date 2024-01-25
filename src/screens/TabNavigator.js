@@ -6,7 +6,15 @@ import ChatsPage from "./ChatsPage";
 import ProfilePage from "./ProfilePage";
 import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
 import { auth, db } from "../../firebaseConfig";
-import { Text, View, StyleSheet, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import {
   collection,
   addDoc,
@@ -23,7 +31,7 @@ import {
 
 const Tab = createBottomTabNavigator();
 
-function TabNavigator() {
+function TabNavigator({ navigation }) {
   let isNew = true;
   const currentUserUid = auth.currentUser.uid;
   const [profileImg, setprofileImg] = useState("");
@@ -31,6 +39,9 @@ function TabNavigator() {
     firstName: "",
     profilePicture: null,
   });
+
+  const [searchText, setSearchText] = useState("");
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   useEffect(() => {
     const chatsCollection = collection(db, "chats");
@@ -67,6 +78,29 @@ function TabNavigator() {
     });
     return () => unsub();
   }, []);
+
+  const handleSearch = () => {
+    navigation.navigate("Home", { searchText });
+  };
+
+  const showAlert = () => {
+    // Display an alert when this function is called
+    Alert.alert(
+      "Alert Title",
+      "Alert Message",
+      [
+        {
+          text: "OK",
+          onPress: () => console.log("OK Pressed"),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const toggleSearchVisibility = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
 
   return (
     <Tab.Navigator
@@ -112,7 +146,7 @@ function TabNavigator() {
           headerTitleStyle: {
             fontWeight: "bold",
           },
-          headerTitle: "Home",
+          headerTitle: "",
           headerTitleAlign: "center",
           headerLeft: () => (
             <View style={[styles.headerLeft, { flexDirection: "column" }]}>
@@ -123,6 +157,31 @@ function TabNavigator() {
                 ) : null}
                 <Text style={styles.headerText}>{user.firstName}</Text>
               </View>
+            </View>
+          ),
+          headerRight: () => (
+            <View style={{ flexDirection: "row", marginRight: 10 }}>
+              {isSearchVisible && (
+                <TextInput
+                  style={{
+                    height: 30,
+                    borderColor: "gray",
+                    borderWidth: 1,
+                    marginRight: 10,
+                    paddingHorizontal: 8,
+                  }}
+                  placeholder="Search"
+                  value={searchText}
+                  onChangeText={(text) => setSearchText(text)}
+                  onSubmitEditing={handleSearch}
+                />
+              )}
+              <TouchableOpacity onPress={toggleSearchVisibility}>
+                <Ionicons name="search" size={24} color="#000000" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={showAlert}>
+                <Ionicons name="notifications" size={24} color="#000000" />
+              </TouchableOpacity>
             </View>
           ),
           tabBarLabel: ({ focused }) => (
@@ -137,12 +196,6 @@ function TabNavigator() {
                 Home
               </Text>
             </View>
-          ),
-          headerRight: () => (
-            <Image
-              style={styles.tabBarIcon}
-              source={require("../assets/Official-Jobless-logo-updated.png")}
-            />
           ),
         }}
       />
