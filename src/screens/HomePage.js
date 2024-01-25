@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Text,
   TouchableOpacity,
@@ -5,16 +6,14 @@ import {
   FlatList,
   StyleSheet,
   Image,
+  TextInput,
 } from "react-native";
-
 import {
   getCollection,
   getCollectionByOrder,
   getCollectionByQuery,
 } from "../Api/FirebaseDb";
-import React, { useState, useEffect, useCallback } from "react";
 import { db, collection, auth } from "../../firebaseConfig";
-import { Button, Card } from "galio-framework";
 import {
   query,
   orderBy,
@@ -26,10 +25,11 @@ import {
 import defaultImage from "../assets/default-image.png";
 import { useFocusEffect } from "@react-navigation/native";
 
-function App({ navigation }) {
+function HomePage({ route, navigation }) {
   const [items, setItems] = useState([]);
   const [lastVisible, setLastVisible] = useState(null);
   const [profileImg, setprofileImg] = useState("");
+  const { searchText } = route.params || { searchText: "" };
 
   const handleLogout = () => {
     auth
@@ -49,27 +49,33 @@ function App({ navigation }) {
   };
 
   const fetchData = async () => {
-    let snapshot = await getCollectionByOrder("post", "created", 20);
-    console.log(snapshot);
+    let snapshot;
+
+    if (searchText.trim() === "") {
+      snapshot = await getCollectionByOrder("post", "created", 20);
+    } else {
+      const itemsRef = collection(db, "post");
+      const q = query(itemsRef, where("title", ">=", searchText), limit(20));
+      snapshot = getCollectionByQuery(q);
+    }
+
     const itemsData = await snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
     setItems(itemsData);
     setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
-    console.log("This: " + itemsData.owner);
 
-    // Get the profile picture in the profileimages collection
-    if (itemsData.owner != undefined) {
+    if (itemsData.length > 0) {
+      // Get the profile picture in the profileimages collection
       const userId = auth.currentUser.uid;
       const qu = query(
         collection(db, "profileimages"),
-        where("owner", "==", itemsData.owner)
+        where("owner", "==", itemsData[0].owner)
       );
       getDocs(qu).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setprofileImg(doc.data().imageURI);
-          console.log(doc.data());
         });
       });
     }
@@ -77,7 +83,7 @@ function App({ navigation }) {
 
   useEffect(() => {
     fetchData(auth.currentUser.uid);
-  }, []);
+  }, [searchText]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -85,7 +91,7 @@ function App({ navigation }) {
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, searchText]);
 
   const fetchMore = () => {
     if (!lastVisible) return;
@@ -127,7 +133,7 @@ function App({ navigation }) {
   );
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={items}
         renderItem={renderItem}
@@ -143,7 +149,7 @@ function App({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 4,
   },
   postContainer: {
     flexDirection: "row",
@@ -174,6 +180,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
   },
+  searchInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 8,
+    paddingHorizontal: 8,
+  },
 });
 
-export default App;
+export default HomePage;
