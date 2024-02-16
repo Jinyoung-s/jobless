@@ -10,7 +10,7 @@ import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
 import { Text, View, StyleSheet } from "react-native";
 import Conversation from "./src/screens/ChatRoomPage";
-
+import TabNavigator from "./src/screens/TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,52 +26,51 @@ function App() {
         <Stack.Screen
           options={{ headerShown: false }}
           name="Main"
-          component={MainPage}
+          component={TabNavigator}
         />
-        
-        <Stack.Screen 
-          name="Edit" 
+
+        <Stack.Screen
+          name="Edit"
           component={EditPage}
           options={{
-            title: 'Edit',
+            title: "Edit",
             headerStyle: {
-              backgroundColor: '#000000',
+              backgroundColor: "#000000",
             },
-            headerTintColor: '#FFFFFF',
+            headerTintColor: "#FFFFFF",
             headerTitleStyle: {
-              fontWeight: 'bold',
+              fontWeight: "bold",
             },
           }}
         />
-        
-        <Stack.Screen 
-          name="Details" 
+
+        <Stack.Screen
+          name="Details"
           component={PostDetails}
           options={{
-            title: 'Job Details',
+            title: "Job Details",
             headerStyle: {
-              backgroundColor: '#000000',
+              backgroundColor: "#000000",
             },
-            headerTintColor: '#FFFFFF',
+            headerTintColor: "#FFFFFF",
             headerTitleStyle: {
-              fontWeight: 'bold',
+              fontWeight: "bold",
             },
           }}
-        
         />
-        <Stack.Screen 
-          name="Conversation" 
+        <Stack.Screen
+          name="Conversation"
           component={Conversation}
           options={{
-            title: 'Conversation',
+            title: "Conversation",
             headerStyle: {
-              backgroundColor: '#000000',
+              backgroundColor: "#000000",
             },
-            headerTintColor: '#FFFFFF',
+            headerTintColor: "#FFFFFF",
             headerTitleStyle: {
-              fontWeight: 'bold',
+              fontWeight: "bold",
             },
-          }} 
+          }}
         />
 
         <Stack.Screen name="Register" component={RegisterPage} />
@@ -84,18 +83,16 @@ function App() {
 }
 
 const styles = StyleSheet.create({
-
-  headerLeft: {   
+  headerLeft: {
     flexDirection: "row",
     alignItems: "flex-end",
-    margin: '10px'
+    margin: "10px",
   },
 
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: '#FFFFFF',
-    
+    color: "#FFFFFF",
   },
 });
 

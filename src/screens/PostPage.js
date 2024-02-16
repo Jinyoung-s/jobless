@@ -19,7 +19,7 @@ import defaultImage from "../assets/post-logo-removebg-preview.png";
 import { Card } from "galio-framework";
 
 function App({ navigation }) {
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -29,26 +29,32 @@ function App({ navigation }) {
     let result = await ImagePicker.launchImageLibraryAsync();
 
     if (!result.canceled) {
-      setImage(result);
+      setImages((prevImages) => [...prevImages, result]);
     }
   };
 
   const handleCreatePost = async () => {
     let today = new Date();
+    const uploadPromises = [];
 
-    const response = await fetch(image.uri);
-    const blob = await response.blob();
+    for (let i = 0; i < images.length; i++) {
+      const response = await fetch(images[i].uri);
+      const blob = await response.blob();
 
-    const storageRef = ref(storage, `postImages/IMG${today.getTime()}`);
-    const userData = await getUserData(auth.currentUser.uid);
+      const storageRef = ref(storage, `postImages/IMG${today.getTime()}_${i}`);
+      uploadPromises.push(uploadBytes(storageRef, blob));
+    }
+
     try {
-      const snapshot = await uploadBytes(storageRef, blob);
-      console.log("Image uploaded successfully");
-      const downloadURL = await getDownloadURL(snapshot.ref);
+      const snapshots = await Promise.all(uploadPromises);
+      const downloadURLs = await Promise.all(
+        snapshots.map((snapshot) => getDownloadURL(snapshot.ref))
+      );
 
+      const userData = await getUserData(auth.currentUser.uid);
       const postData = {
         title: title,
-        image: downloadURL,
+        images: downloadURLs,
         description,
         price,
         category,
@@ -78,9 +84,13 @@ function App({ navigation }) {
           />
         </View>
         <View style={styles.containerImage}>
-          {image && (
-            <Image source={{ uri: image.uri }} style={styles.previewImage} />
-          )}
+          {images.map((img, index) => (
+            <Image
+              key={index}
+              source={{ uri: img.uri }}
+              style={styles.previewImage}
+            />
+          ))}
         </View>
 
         <TouchableOpacity
@@ -112,43 +122,7 @@ function App({ navigation }) {
             selectedValue={category}
             onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
           >
-            <Picker.Item label="Accountant" value="Accountant" />
-            <Picker.Item
-              label="Advertising executive"
-              value="Advertising executive"
-            />
-            <Picker.Item label="Architect" value="Architect" />
-            <Picker.Item label="Attorney/Lawyer" value="Attorney/Lawyer" />
-            <Picker.Item label="Banker" value="Banker" />
-            <Picker.Item label="Business analyst" value="Business analyst" />
-            <Picker.Item label="Consultant" value="Consultant" />
-            <Picker.Item
-              label="Customer service representative"
-              value="Customer service representative"
-            />
-            <Picker.Item label="Data analyst" value="Data analyst" />
-            <Picker.Item
-              label="Database administrator"
-              value="Database administrator"
-            />
-            <Picker.Item label="Economist" value="Economist" />
-            <Picker.Item label="Editor" value="Editor" />
-            <Picker.Item label="Financial advisor" value="Financial advisor" />
-            <Picker.Item
-              label="Human resources manager"
-              value="Human resources manager"
-            />
-            <Picker.Item label="Journalist" value="Journalist" />
-            <Picker.Item label="Farmer" value="Farmer" />
-            <Picker.Item label="Assembler" value="Assembler" />
-            <Picker.Item label="Web developer" value="Web developer" />
-            <Picker.Item label="Teacher" value="Teacher" />
-            <Picker.Item label="Electrician" value="Electrician" />
-            <Picker.Item label="Janitor" value="Janitor" />
-            <Picker.Item label="Plumber" value="Plumber" />
-            <Picker.Item label="Roofer" value="Roofer" />
-            <Picker.Item label="Warehouse worker" value="Warehouse worker" />
-            <Picker.Item label="Truck driver" value="Truck driver" />
+            {/* ... your Picker.Item components */}
           </Picker>
         </View>
 
@@ -174,6 +148,8 @@ function App({ navigation }) {
   );
 }
 
+// Remaining styles remain the same
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -183,7 +159,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   pictureContainer: {
-    alignItems: "center",
+    alignItems: "center",\
     marginBottom: 20,
   },
   addpostPicture: {

@@ -26,10 +26,11 @@ import {
 import defaultImage from "../assets/default-image.png";
 import { useFocusEffect } from "@react-navigation/native";
 
-function App({ navigation }) {
+function Home({ navigation, route }) {
   const [items, setItems] = useState([]);
   const [lastVisible, setLastVisible] = useState(null);
   const [profileImg, setprofileImg] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   const handleLogout = () => {
     auth
@@ -48,8 +49,20 @@ function App({ navigation }) {
     navigation.navigate("Details", { postId: postingId });
   };
 
-  const fetchData = async () => {
-    let snapshot = await getCollectionByOrder("post", "created", 20);
+  const fetchData = async (userId, searchText) => {
+    var q = null;
+    if (searchText) {
+      q = query(
+        collection(db, "post"),
+        where("title", ">=", searchText.toLowerCase()),
+        where("title", "<=", searchText.toLowerCase() + "\uf8ff")
+      );
+    } else {
+      q = query(collection(db, "post"));
+    }
+
+    const snapshot = await getDocs(q);
+
     console.log(snapshot);
     const itemsData = await snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -62,10 +75,6 @@ function App({ navigation }) {
     // Get the profile picture in the profileimages collection
     if (itemsData.owner != undefined) {
       const userId = auth.currentUser.uid;
-      const qu = query(
-        collection(db, "profileimages"),
-        where("owner", "==", itemsData.owner)
-      );
       getDocs(qu).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           setprofileImg(doc.data().imageURI);
@@ -76,8 +85,8 @@ function App({ navigation }) {
   };
 
   useEffect(() => {
-    fetchData(auth.currentUser.uid);
-  }, []);
+    fetchData(auth.currentUser.uid, route.params?.searchText);
+  }, [navigation, route.params?.searchText]); // Include route.params?.searchText to listen for changes in searchText
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -112,7 +121,10 @@ function App({ navigation }) {
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => openDetails(item.id)}>
       <View style={styles.postContainer}>
-        <Image style={styles.postImage} source={{ uri: item.image }} />
+        <Image
+          style={styles.postImage}
+          source={{ uri: item.images ? item.images[0] : item.image }}
+        />
         <View style={styles.postDetails}>
           <Text style={styles.postTitle}>{item.title}</Text>
           <Text>
@@ -176,4 +188,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Home;
