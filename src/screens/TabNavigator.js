@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./HomePage";
-import PostPage from "./PostPage";
+import PostPage from "./PostPage1";
 import ChatsPage from "./ChatsPage";
 import ProfilePage from "./ProfilePage";
 import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
