@@ -6,14 +6,8 @@ import React, { useState, useEffect } from "react";
 import { Switch } from 'react-native-switch';
 import Geolocation from 'react-native-geolocation-service';
 import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Image
-} from "react-native";
+import { View, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from "react-native";
+import '/src/styles/RegisterPage.css';
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -188,8 +182,6 @@ function App() {
 
     header: {
       width: '100%',
-      borderWidth: 1,
-      borderColor: 'red',
     },
 
     headerSub: {
@@ -206,8 +198,6 @@ function App() {
     icon: {
       marginRight: 5,
     },
-
-  
 
     image:{
       height:150,
