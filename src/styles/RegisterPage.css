@@ -1,0 +1,64 @@
+/* styles.css */
+
+.container {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background-color: #F50520;
+}
+
+.textInput {
+  height: 40px;
+  width: 80%;
+  border-color: transparent;
+  border-width: 1px;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 20px;
+  background-color: #FFFFFF;
+}
+
+.image {
+  height: 150px;
+  width: 150px;
+  border-color: transparent;
+  border-radius: 5px;
+  shadow-color: #000;
+  shadow-offset: 0px 2px;
+  shadow-opacity: 0.8;
+  shadow-radius: 5px;
+  elevation: 5;
+}
+
+
+.button {
+    border-color: transparent;
+    border-radius: 50px;
+    shadow-color: #000;
+    shadow-offset: 0px 2px; /* Updated syntax */
+    shadow-opacity: 0.8;
+    shadow-radius: 5px;
+    elevation: 5;
+  }
+  
+
+.header {
+  width: 100%;
+  border-width: 1px;
+  border-color: red;
+}
+
+.headerSub {
+  flex-direction: row-reverse;
+  margin-right: 50px;
+}
+
+.optional {
+  font-size: 12px;
+  flex-direction: row;
+  margin-left: 50px;
+}
+
+.icon {
+  margin-right: 5px;
+}
