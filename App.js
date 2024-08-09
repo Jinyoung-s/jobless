@@ -6,6 +6,7 @@ import RegisterPage from "./src/screens/RegisterPage";
 import ProfilePage from "./src/screens/ProfilePage";
 import EditPage from "./src/screens/EditPage";
 import PostDetails from "./src/screens/PostDetails";
+import PostDetails2 from "./src/screens/PostDetail2";
 import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
 import { Text, View, StyleSheet } from "react-native";
@@ -46,7 +47,7 @@ function App() {
 
         <Stack.Screen
           name="Details"
-          component={PostDetails}
+          component={PostDetails2}
           options={{
             title: "Job Details",
             headerStyle: {

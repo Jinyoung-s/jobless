@@ -1,13 +1,19 @@
 import { db } from "../../firebaseConfig";
-import { collection, addDoc, doc, setDoc, updateDoc  } from "firebase/firestore"; 
+import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Button, Text } from "galio-framework";
 import React, { useState, useEffect } from "react";
-import { Switch } from 'react-native-switch';
-import Geolocation from 'react-native-geolocation-service';
+import { Switch } from "react-native-switch";
+import Geolocation from "react-native-geolocation-service";
 import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
-import { View, TextInput, TouchableOpacity, ScrollView, StyleSheet, Image } from "react-native";
-import '/src/styles/RegisterPage.css';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -58,21 +64,20 @@ function App() {
     }
 
     const auth = getAuth();
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in 
-          const user = userCredential.user;
-          addUserData();
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-        });
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        addUserData();
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
   };
 
-  
   const addUserData = async () => {
     try {
       const auth = getAuth();
@@ -82,7 +87,7 @@ function App() {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        birthdate: birthdate,        
+        birthdate: birthdate,
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -145,11 +150,11 @@ function App() {
       // Request location permission and start tracking
       Geolocation.getCurrentPosition(
         (position) => {
-          console.log('Current Position:', position);
+          console.log("Current Position:", position);
           // Do something with the location data
         },
         (error) => {
-          console.error('Error getting location:', error);
+          console.error("Error getting location:", error);
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
@@ -167,7 +172,7 @@ function App() {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor:"#F505205"
+      backgroundColor: "#F505205",
     },
     textInput: {
       height: 40,
@@ -177,21 +182,21 @@ function App() {
       padding: 10,
       margin: 10,
       borderRadius: 20,
-      backgroundColor: '#FFFFFF',
+      backgroundColor: "#FFFFFF",
     },
 
     header: {
-      width: '100%',
+      width: "100%",
     },
 
     headerSub: {
-      flexDirection: 'row-reverse',
+      flexDirection: "row-reverse",
       marginRight: 50,
     },
 
     optional: {
       fontSize: 12,
-      flexDirection: 'row',
+      flexDirection: "row",
       marginLeft: 50,
     },
 
@@ -199,12 +204,12 @@ function App() {
       marginRight: 5,
     },
 
-    image:{
-      height:150,
-      width:150,
-      borderColor: 'transparent',
+    image: {
+      height: 150,
+      width: 150,
+      borderColor: "transparent",
       borderRadius: 5,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2,
@@ -212,13 +217,12 @@ function App() {
       shadowOpacity: 0.8,
       shadowRadius: 5,
       elevation: 5,
-      
     },
 
-    button:{
-      borderColor: 'transparent',
+    button: {
+      borderColor: "transparent",
       borderRadius: 50,
-      shadowColor: '#000',
+      shadowColor: "#000",
       shadowOffset: {
         width: 0,
         height: 2,
@@ -226,115 +230,123 @@ function App() {
       shadowOpacity: 0.8,
       shadowRadius: 5,
       elevation: 5,
-  },
+    },
   });
 
   // Return Content
 
   return (
-      <View style={styles.container}>
-        <Image style={styles.image} source={require("../assets/Official-Jobless-logo-updated.png")}/>
-        <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
-          Sign Up Now
-        </Text>
-       
+    <View style={styles.container}>
+      <Image
+        style={styles.image}
+        source={require("../assets/Official-Jobless-logo-updated.png")}
+      />
+      <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
+        Sign Up Now
+      </Text>
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="First Name"
-          value={firstName}
-          onChangeText={(text) => setFirstName(text)}
-        />
-        {firstNameError !== "" && (
-          <Text color = "red">{firstNameError}</Text>
-        )}
+      <TextInput
+        style={styles.textInput}
+        placeholder="First Name"
+        value={firstName}
+        onChangeText={(text) => setFirstName(text)}
+      />
+      {firstNameError !== "" && <Text color="red">{firstNameError}</Text>}
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="Last Name"
-          value={lastName}
-          onChangeText={(text) => setLastName(text)}
-        />
-        {lastNameError !== "" && (
-          <Text color = "red">{lastNameError}</Text>
-        )}
+      <TextInput
+        style={styles.textInput}
+        placeholder="Last Name"
+        value={lastName}
+        onChangeText={(text) => setLastName(text)}
+      />
+      {lastNameError !== "" && <Text color="red">{lastNameError}</Text>}
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-        />
-        {emailError !== "" && (
-          <Text color = "red">{emailError}</Text>
-        )}
+      <TextInput
+        style={styles.textInput}
+        placeholder="Email"
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+      />
+      {emailError !== "" && <Text color="red">{emailError}</Text>}
 
-        <TextInput
-          style={styles.textInput}
-          secureTextEntry={true}
-          placeholder="Enter password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-        />
-        {passwordError !== "" && (
-          <Text color = "red">{passwordError}</Text>
-        )}
+      <TextInput
+        style={styles.textInput}
+        secureTextEntry={true}
+        placeholder="Enter password"
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+      />
+      {passwordError !== "" && <Text color="red">{passwordError}</Text>}
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="Enter birthdate (MM/DD/YYYY)"
-          value={birthdate}
-          onChangeText={(text) => setBirthday(text)}
-          // keyboardType="default"
-          maxLength={10}
-        />
-        {birthDateError !== "" && (
-          <Text color = "red">{birthDateError}</Text>
-        )}
+      <TextInput
+        style={styles.textInput}
+        placeholder="Enter birthdate (MM/DD/YYYY)"
+        value={birthdate}
+        onChangeText={(text) => setBirthday(text)}
+        // keyboardType="default"
+        maxLength={10}
+      />
+      {birthDateError !== "" && <Text color="red">{birthDateError}</Text>}
 
-        
-
-        <View style={styles.header}>
-          <Text style={styles.optional}>(optional)</Text> 
-          <View style={styles.headerSub}> 
-            <Ionicons name="md-help-circle" size={24} color="black" style={styles.icon} />
-            <Ionicons name="md-information-circle" size={24} color="black" style={styles.icon} />
-          </View>
-         
+      <View style={styles.header}>
+        <Text style={styles.optional}>(optional)</Text>
+        <View style={styles.headerSub}>
+          <Ionicons
+            name="md-help-circle"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
+          <Ionicons
+            name="md-information-circle"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
         </View>
-
-        <Text>
-        Allow app to activate location while using it?
-        </Text>
-
-        <Switch
-          value={locationEnabled}
-          onValueChange={handleToggle}
-          disabled={false}
-          activeText={'Yes'}
-          inActiveText={'No'}
-          backgroundActive={'green'}
-          backgroundInactive={'gray'}
-          circleActiveColor={'#30a566'}
-          circleInActiveColor={'#000000'}
-        />    
-
-        <Button round style={styles.button} size="small" color="#4682B4" onPress={handleSubmit}>
-          Submit
-        </Button>
-
-        <Button round style={styles.button} size="small" color="#FF4500" onPress={handleClear}>
-          Clear
-        </Button>
-
-        
-        <Text>
-          Go back to
-          <TouchableOpacity onPress={handleLogin}>
-            <Text color="#4169E1"> Login</Text>
-          </TouchableOpacity>        
-        </Text>       
       </View>
+
+      <Text>Allow app to activate location while using it?</Text>
+
+      <Switch
+        value={locationEnabled}
+        onValueChange={handleToggle}
+        disabled={false}
+        activeText={"Yes"}
+        inActiveText={"No"}
+        backgroundActive={"green"}
+        backgroundInactive={"gray"}
+        circleActiveColor={"#30a566"}
+        circleInActiveColor={"#000000"}
+      />
+
+      <Button
+        round
+        style={styles.button}
+        size="small"
+        color="#4682B4"
+        onPress={handleSubmit}
+      >
+        Submit
+      </Button>
+
+      <Button
+        round
+        style={styles.button}
+        size="small"
+        color="#FF4500"
+        onPress={handleClear}
+      >
+        Clear
+      </Button>
+
+      <Text>
+        Go back to
+        <TouchableOpacity onPress={handleLogin}>
+          <Text color="#4169E1"> Login</Text>
+        </TouchableOpacity>
+      </Text>
+    </View>
   );
 }
 
