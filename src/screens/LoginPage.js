@@ -64,6 +64,12 @@ const Login = () => {
         autoCapitalize="none"
         autoCorrect={false}
       />
+      <TouchableOpacity onPress={handleReset}>
+        <Text style={{ color: "#4169E1", fontWeight: "bold" }}>
+          {" "}
+          Forgot Password?
+        </Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.mediumButton,
@@ -107,12 +113,6 @@ const Login = () => {
           Sign in with Apple
         </Text>
       </TouchableOpacity>
-      <Text>
-        Forgot Password?
-        <TouchableOpacity onPress={handleReset}>
-          <Text style={{ color: "#4169E1", fontWeight: "bold" }}> Reset</Text>
-        </TouchableOpacity>
-      </Text>
       <Text>
         Don't have an account yet?
         <TouchableOpacity onPress={handleRegister}>
