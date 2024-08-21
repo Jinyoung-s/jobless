@@ -1,6 +1,5 @@
 import { getCollectionByOrder } from "../src/Api/FirebaseDb"; // mock the FirebaseDb module
 import { auth } from "../firebaseConfig"; // mock the firebaseConfig module
-
 jest.mock("../src/Api/FirebaseDb"); // mock the FirebaseDb module
 jest.mock("../firebaseConfig"); // mock the firebaseConfig module
 
