@@ -100,7 +100,7 @@ const Login = () => {
         <Text style={[{ color: "#000000" }, styles.mediumFont]}>
           Sign in with Google
         </Text>
-      </TouchableOpacity>{" "}
+      </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.mediumButton,

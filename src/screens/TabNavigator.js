@@ -98,10 +98,6 @@ function TabNavigator({ navigation }) {
     );
   };
 
-  const toggleSearchVisibility = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -161,24 +157,6 @@ function TabNavigator({ navigation }) {
           ),
           headerRight: () => (
             <View style={{ flexDirection: "row", marginRight: 10 }}>
-              {isSearchVisible && (
-                <TextInput
-                  style={{
-                    height: 30,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    marginRight: 10,
-                    paddingHorizontal: 8,
-                  }}
-                  placeholder="Search"
-                  value={searchText}
-                  onChangeText={(text) => setSearchText(text)}
-                  onSubmitEditing={handleSearch}
-                />
-              )}
-              <TouchableOpacity onPress={toggleSearchVisibility}>
-                <Ionicons name="search" size={24} color="#000000" />
-              </TouchableOpacity>
               <TouchableOpacity onPress={showAlert}>
                 <Ionicons name="notifications" size={24} color="#000000" />
               </TouchableOpacity>
