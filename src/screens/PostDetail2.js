@@ -226,6 +226,7 @@ const PostDetail = ({ route, navigation }) => {
             </TouchableOpacity>
           )}
           <Text style={styles.postTitle}>{post?.title}</Text>
+          <Text style={styles.postCategory}>{post?.category}</Text>
           <Text style={styles.postPrice}>Price: ${post?.price}</Text>
           <Text style={styles.postDescription}>{post?.description}</Text>
         </View>
@@ -308,6 +309,11 @@ const styles = StyleSheet.create({
     color: "#007AFF", // Blue color
     marginBottom: 10,
     fontWeight: "bold",
+  },
+  postCategory: {
+    fontSize: 14,
+    marginBottom: 2,
+    marginTop: -7,
   },
   postDescription: {
     fontSize: 16,

@@ -15,6 +15,7 @@ import { Picker } from "@react-native-picker/picker";
 import { saveData, getUserData } from "../Api/FirebaseDb";
 import { storage, auth } from "../../firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import defaultImage from "../assets/post-logo-removebg-preview.png";
 
 const PostCreation = () => {
   const [photos, setPhotos] = useState([]);
@@ -97,8 +98,8 @@ const PostCreation = () => {
             : defaultImage,
       };
 
-      saveData("post", postData);
-      // navigation.navigate("Home");
+      await saveData("post", postData);
+      navigation.navigate("Home");
     } catch (error) {
       console.log("Error uploading image: ", error);
     }
@@ -155,8 +156,18 @@ const PostCreation = () => {
         <Picker
           style={styles.input_width50}
           selectedValue={category}
-          onValueChange={(itemValue, itemIndex) => setCategory(itemValue)}
-        ></Picker>
+          onValueChange={(itemValue) => setCategory(itemValue)}
+        >
+          <Picker.Item label="Select a category" value="" />
+          <Picker.Item label="Home Services" value="home_services" />
+          <Picker.Item label="Transportation" value="transportation" />
+          <Picker.Item label="Repairs" value="repairs" />
+          <Picker.Item label="Delivery" value="delivery" />
+          <Picker.Item label="Gardening" value="gardening" />
+          <Picker.Item label="Moving Assistance" value="moving assistance" />
+          <Picker.Item label="Pet Care" value="pet care" />
+          <Picker.Item label="Other" value="other" />
+        </Picker>
       </View>
 
       <View style={styles.inputSection}>

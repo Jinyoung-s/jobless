@@ -82,16 +82,19 @@ const Login = () => {
         >
           Login
         </Button>
-        <Text color='#FFFFFF'>
+        <Text color="#FFFFFF">
           Forgot Password?
           <TouchableOpacity onPress={handleReset}>
-          <Text style={{ color: '#4169E1', fontWeight: 'bold' }}> Reset</Text>
+            <Text style={{ color: "#4169E1", fontWeight: "bold" }}> Reset</Text>
           </TouchableOpacity>
         </Text>
-        <Text color='#FFFFFF'>
+        <Text color="#FFFFFF">
           Don't have an account yet?
           <TouchableOpacity onPress={handleRegister}>
-          <Text style={{ color: '#4169E1', fontWeight: 'bold' }}> Register</Text>
+            <Text style={{ color: "#4169E1", fontWeight: "bold" }}>
+              {" "}
+              Register
+            </Text>
           </TouchableOpacity>
         </Text>
       </View>
@@ -124,7 +127,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: "transparent",
   },

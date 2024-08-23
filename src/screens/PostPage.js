@@ -16,7 +16,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { saveData, getUserData } from "../Api/FirebaseDb";
 import defaultImage from "../assets/post-logo-removebg-preview.png";
-import { Card } from "galio-framework";
 
 function App({ navigation }) {
   const [images, setImages] = useState([]);
