@@ -1,7 +1,7 @@
 import TabNavigator from "./TabNavigator";
 
 function App() {
-  return <TabNavigator/>;
+  return <TabNavigator />;
 }
 
 export default App;
