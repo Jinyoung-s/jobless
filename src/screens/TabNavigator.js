@@ -28,6 +28,7 @@ import {
   onSnapshot,
   arrayUnion,
 } from "firebase/firestore";
+import { primaryColor } from "../styles/styles";
 
 const Tab = createBottomTabNavigator();
 
@@ -122,7 +123,7 @@ function TabNavigator({ navigation }) {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#000000",
+        tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: "#000000",
         tabBarStyle: {
           backgroundColor: "#FFFFFF",
@@ -136,15 +137,17 @@ function TabNavigator({ navigation }) {
         component={HomePage}
         options={{
           headerStyle: {
-            backgroundColor: "#FFFFFF",
+            backgroundColor: primaryColor,
+            borderBottomWidth: 0,
           },
           headerTintColor: "#000000",
           headerTitleStyle: {
-            fontWeight: "bold",
+            fontWeight: "500",
           },
+
           headerTitle: "",
           headerTitleAlign: "center",
-          headerLeft: () => (
+          headerRight: () => (
             <View style={[styles.headerLeft, { flexDirection: "column" }]}>
               <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
                 {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
@@ -155,26 +158,26 @@ function TabNavigator({ navigation }) {
               </View>
             </View>
           ),
-          headerRight: () => (
+          headerLeft: () => (
             <View style={{ flexDirection: "row", marginRight: 10 }}>
               <TouchableOpacity onPress={showAlert}>
                 <Ionicons name="notifications" size={24} color="#000000" />
               </TouchableOpacity>
             </View>
           ),
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Home
-              </Text>
-            </View>
-          ),
+          // tabBarLabel: ({ focused }) => (
+          //   <View
+          //     style={{
+          //       flex: 1,
+          //       alignItems: "center",
+          //       justifyContent: "center",
+          //     }}
+          //   >
+          //     <Text style={{ color: focused ? primaryColor : "#CCCCCC" }}>
+          //       Home
+          //     </Text>
+          //   </View>
+          // ),
         }}
       />
 
@@ -191,19 +194,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Post",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Post
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}
@@ -226,19 +217,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Chats",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Chats
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}
@@ -261,19 +240,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Profile",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Profile
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}

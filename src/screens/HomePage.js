@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  StyleSheet,
   Image,
   TextInput,
 } from "react-native";
@@ -15,7 +14,6 @@ import {
 } from "../Api/FirebaseDb";
 import React, { useState, useEffect, useCallback } from "react";
 import { db, collection, auth } from "../../firebaseConfig";
-import { Button, Card } from "galio-framework";
 import {
   query,
   orderBy,
@@ -141,12 +139,12 @@ function Home({ navigation, route }) {
 
   return (
     <View style={styles.homeContainer}>
-      <View>
+      <View style={styles.searcBarContainer}>
         <TextInput style={styles.input} placeholder="Search" />
         <TouchableOpacity styles={styles.locationButton}>
           <Text
             style={{
-              color: "#006A79",
+              color: "#ffffff",
               fontWeight: "600",
               textAlign: "right",
               paddingHorizontal: 10,
@@ -163,6 +161,18 @@ function Home({ navigation, route }) {
         keyExtractor={(item) => item.id}
         onEndReached={fetchMore}
         onEndReachedThreshold={0.5}
+        ListHeaderComponent={() => (
+          <Text
+            style={{
+              paddingTop: 10,
+              paddingStart: 10,
+              fontSize: 30,
+              fontWeight: "500",
+            }}
+          >
+            Search results
+          </Text>
+        )}
       />
     </View>
   );

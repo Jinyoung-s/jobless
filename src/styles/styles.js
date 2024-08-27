@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+export const primaryColor = "#006A79";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -9,7 +10,6 @@ export const styles = StyleSheet.create({
   },
   homeContainer: {
     flex: 1,
-    paddingHorizontal: 10,
     justifyContent: "center",
     color: "",
   },
@@ -33,7 +33,11 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 5,
   },
-
+  searcBarContainer: {
+    backgroundColor: primaryColor,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+  },
   customButton: {
     margin: 0,
     height: 50,
