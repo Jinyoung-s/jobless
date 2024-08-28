@@ -7,12 +7,8 @@ import {
   TextInput,
 } from "react-native";
 import { styles } from "../styles/styles";
-import {
-  getCollection,
-  getCollectionByOrder,
-  getCollectionByQuery,
-} from "../Api/FirebaseDb";
-import React, { useState, useEffect, useCallback } from "react";
+import { getCollectionByQuery } from "../Api/FirebaseDb";
+import React, { useState, useEffect } from "react";
 import { db, collection, auth } from "../../firebaseConfig";
 import {
   query,
@@ -22,8 +18,6 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import defaultImage from "../assets/default-image.png";
-import { useFocusEffect } from "@react-navigation/native";
 
 function Home({ navigation, route }) {
   const [items, setItems] = useState([]);
@@ -141,7 +135,10 @@ function Home({ navigation, route }) {
     <View style={styles.homeContainer}>
       <View style={styles.searcBarContainer}>
         <TextInput style={styles.input} placeholder="Search" />
-        <TouchableOpacity styles={styles.locationButton}>
+        <TouchableOpacity
+          styles={styles.locationButton}
+          onPress={() => navigation.navigate("Set location")}
+        >
           <Text
             style={{
               color: "#ffffff",
