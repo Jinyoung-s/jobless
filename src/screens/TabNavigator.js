@@ -1,33 +1,37 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomePage from "./HomePage";
 import PostPage from "./PostPage1";
 import ChatsPage from "./ChatsPage";
 import ProfilePage from "./ProfilePage";
-import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { auth, db } from "../../firebaseConfig";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  TextInput,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Image, Alert } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   collection,
-  addDoc,
   query,
   getDocs,
-  orderBy,
-  startAfter,
-  limit,
   where,
-  doc,
   onSnapshot,
-  arrayUnion,
 } from "firebase/firestore";
+import { primaryColor } from "../styles/styles";
+import SetLocation from "./SetLocationPage";
+
+const HomeStack = createNativeStackNavigator();
+
+function HomeStackScreen({ navigation, route }) {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Home"
+        component={HomePage}
+        options={{ headerShown: false }}
+      />
+      <HomeStack.Screen name="Set location" component={SetLocation} />
+    </HomeStack.Navigator>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 
@@ -41,8 +45,6 @@ function TabNavigator({ navigation }) {
   });
 
   const [searchText, setSearchText] = useState("");
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
-
   useEffect(() => {
     const chatsCollection = collection(db, "chats");
     const chatMessagesQuery1 = query(
@@ -98,10 +100,6 @@ function TabNavigator({ navigation }) {
     );
   };
 
-  const toggleSearchVisibility = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
-
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -126,7 +124,7 @@ function TabNavigator({ navigation }) {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#000000",
+        tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: "#000000",
         tabBarStyle: {
           backgroundColor: "#FFFFFF",
@@ -137,66 +135,38 @@ function TabNavigator({ navigation }) {
     >
       <Tab.Screen
         name="Home"
-        component={HomePage}
+        component={HomeStackScreen}
         options={{
-          headerStyle: {
-            backgroundColor: "#FFFFFF",
-          },
-          headerTintColor: "#000000",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
+          // headerStyle: {
+          //   backgroundColor: primaryColor,
+          //   borderBottomWidth: 0,
+          // },
+          // headerTintColor: "#000000",
+          // headerTitleStyle: {
+          //   fontWeight: "500",
+          // },
+          headerShown: false,
+
           headerTitle: "",
           headerTitleAlign: "center",
-          headerLeft: () => (
-            <View style={[styles.headerLeft, { flexDirection: "column" }]}>
-              <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
-                {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
-                {profileImg ? (
-                  <Image source={{ uri: profileImg }} style={styles.avatar} />
-                ) : null}
-                <Text style={styles.headerText}>{user.firstName}</Text>
-              </View>
-            </View>
-          ),
-          headerRight: () => (
-            <View style={{ flexDirection: "row", marginRight: 10 }}>
-              {isSearchVisible && (
-                <TextInput
-                  style={{
-                    height: 30,
-                    borderColor: "gray",
-                    borderWidth: 1,
-                    marginRight: 10,
-                    paddingHorizontal: 8,
-                  }}
-                  placeholder="Search"
-                  value={searchText}
-                  onChangeText={(text) => setSearchText(text)}
-                  onSubmitEditing={handleSearch}
-                />
-              )}
-              <TouchableOpacity onPress={toggleSearchVisibility}>
-                <Ionicons name="search" size={24} color="#000000" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={showAlert}>
-                <Ionicons name="notifications" size={24} color="#000000" />
-              </TouchableOpacity>
-            </View>
-          ),
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Home
-              </Text>
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View style={[styles.headerLeft, { flexDirection: "column" }]}>
+          //     <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
+          //       {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
+          //       {profileImg ? (
+          //         <Image source={{ uri: profileImg }} style={styles.avatar} />
+          //       ) : null}
+          //       <Text style={styles.headerText}>{user.firstName}</Text>
+          //     </View>
+          //   </View>
+          // ),
+          // headerLeft: () => (
+          //   <View style={{ flexDirection: "row", marginRight: 10 }}>
+          //     <TouchableOpacity onPress={showAlert}>
+          //       <Ionicons name="notifications" size={24} color="#000000" />
+          //     </TouchableOpacity>
+          //   </View>
+          // ),
         }}
       />
 
@@ -213,19 +183,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Post",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Post
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}
@@ -248,19 +206,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Chats",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Chats
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}
@@ -283,19 +229,7 @@ function TabNavigator({ navigation }) {
           },
           headerTitle: "Profile",
           headerTitleAlign: "center",
-          tabBarLabel: ({ focused }) => (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text style={{ color: focused ? "#000000" : "#CCCCCC" }}>
-                Profile
-              </Text>
-            </View>
-          ),
+
           headerRight: () => (
             <Image
               style={styles.tabBarIcon}

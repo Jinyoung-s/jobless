@@ -1,19 +1,12 @@
 import { db } from "../../firebaseConfig";
 import { collection, addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { Button, Text } from "galio-framework";
 import React, { useState, useEffect } from "react";
 import { Switch } from "react-native-switch";
 import Geolocation from "react-native-geolocation-service";
-import { Ionicons, AntDesign, Foundation } from "@expo/vector-icons";
-import {
-  View,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { styles } from "../styles/styles";
+import { Ionicons } from "@expo/vector-icons";
+import { View, TextInput, TouchableOpacity, Text } from "react-native";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -167,86 +160,20 @@ function App() {
     setLocationEnabled(!locationEnabled);
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#F505205",
-    },
-    textInput: {
-      height: 40,
-      width: "80%",
-      borderColor: "transparent",
-      borderWidth: 1,
-      padding: 10,
-      margin: 10,
-      borderRadius: 20,
-      backgroundColor: "#FFFFFF",
-    },
-
-    header: {
-      width: "100%",
-    },
-
-    headerSub: {
-      flexDirection: "row-reverse",
-      marginRight: 50,
-    },
-
-    optional: {
-      fontSize: 12,
-      flexDirection: "row",
-      marginLeft: 50,
-    },
-
-    icon: {
-      marginRight: 5,
-    },
-
-    image: {
-      height: 150,
-      width: 150,
-      borderColor: "transparent",
-      borderRadius: 5,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.8,
-      shadowRadius: 5,
-      elevation: 5,
-    },
-
-    button: {
-      borderColor: "transparent",
-      borderRadius: 50,
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.8,
-      shadowRadius: 5,
-      elevation: 5,
-    },
-  });
-
   // Return Content
 
   return (
     <View style={styles.container}>
-      <Image
+      {/* <Image
         style={styles.image}
         source={require("../assets/Official-Jobless-logo-updated.png")}
-      />
+      /> */}
       <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 10 }}>
-        Sign Up Now
+        Create an account
       </Text>
 
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="First Name"
         value={firstName}
         onChangeText={(text) => setFirstName(text)}
@@ -254,7 +181,7 @@ function App() {
       {firstNameError !== "" && <Text color="red">{firstNameError}</Text>}
 
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="Last Name"
         value={lastName}
         onChangeText={(text) => setLastName(text)}
@@ -262,7 +189,7 @@ function App() {
       {lastNameError !== "" && <Text color="red">{lastNameError}</Text>}
 
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -270,7 +197,7 @@ function App() {
       {emailError !== "" && <Text color="red">{emailError}</Text>}
 
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         secureTextEntry={true}
         placeholder="Enter password"
         value={password}
@@ -279,7 +206,7 @@ function App() {
       {passwordError !== "" && <Text color="red">{passwordError}</Text>}
 
       <TextInput
-        style={styles.textInput}
+        style={styles.input}
         placeholder="Enter birthdate (MM/DD/YYYY)"
         value={birthdate}
         onChangeText={(text) => setBirthday(text)}
@@ -314,38 +241,25 @@ function App() {
         disabled={false}
         activeText={"Yes"}
         inActiveText={"No"}
-        backgroundActive={"green"}
-        backgroundInactive={"gray"}
-        circleActiveColor={"#30a566"}
-        circleInActiveColor={"#000000"}
+        backgroundActive="green"
+        backgroundInactive="gray"
+        circleActiveColor="#39a566"
+        circleBorderInactiveColor="#000000"
+        switchLeftPx={10}
+        switchRightPx={10}
       />
 
-      <Button
-        round
-        style={styles.button}
-        size="small"
-        color="#4682B4"
+      <TouchableOpacity
         onPress={handleSubmit}
+        style={[
+          styles.mediumButton,
+          {
+            backgroundColor: "#006A79",
+          },
+        ]}
       >
-        Submit
-      </Button>
-
-      <Button
-        round
-        style={styles.button}
-        size="small"
-        color="#FF4500"
-        onPress={handleClear}
-      >
-        Clear
-      </Button>
-
-      <Text>
-        Go back to
-        <TouchableOpacity onPress={handleLogin}>
-          <Text color="#4169E1"> Login</Text>
-        </TouchableOpacity>
-      </Text>
+        <Text style={[{ color: "#ffffff" }, styles.mediumFont]}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 }

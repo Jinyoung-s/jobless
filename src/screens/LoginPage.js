@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import { View, TouchableOpacity, Image, TextInput, Text } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
-import { Text, Button, Block, Input } from "galio-framework";
+
+import { styles } from "../styles/styles";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,116 +42,88 @@ const Login = () => {
   };
 
   return (
-    <Block flex>
-      <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={require("../assets/Official-Jobless-logo-updated.png")}
-        />
-        <Input
-          email
-          style={styles.input}
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <Input
-          password
-          viewPass
-          style={styles.passwordinput}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholder="Password"
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        <Button
-          style={styles.loginButton}
-          round
-          color="#4169E1"
-          title="Login"
-          onPress={handleLogin}
-        >
-          Login
-        </Button>
-        <Text color="#FFFFFF">
+    <View style={styles.container}>
+      <Image style={styles.image} source={require("../assets/logo.png")} />
+      <TextInput
+        email
+        style={styles.input}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+        placeholder="Email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      <TextInput
+        password
+        viewPass
+        style={styles.input}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        placeholder="Password"
+        autoCapitalize="none"
+        autoCorrect={false}
+      />
+      <TouchableOpacity onPress={handleReset}>
+        <Text style={{ color: "#4169E1", fontWeight: "bold" }}>
+          {" "}
           Forgot Password?
-          <TouchableOpacity onPress={handleReset}>
-            <Text style={{ color: "#4169E1", fontWeight: "bold" }}> Reset</Text>
-          </TouchableOpacity>
         </Text>
-        <Text color="#FFFFFF">
-          Don't have an account yet?
-          <TouchableOpacity onPress={handleRegister}>
-            <Text style={{ color: "#4169E1", fontWeight: "bold" }}>
-              {" "}
-              Register
-            </Text>
-          </TouchableOpacity>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.mediumButton,
+          {
+            backgroundColor: "#006A79",
+          },
+        ]}
+        onPress={handleLogin}
+      >
+        <Text style={[{ color: "#ffffff" }, styles.mediumFont]}>Login</Text>
+      </TouchableOpacity>
+      <Text
+        style={[
+          { color: "#000000", textAlign: "center", marginVertical: 30 },
+          styles.mediumFont,
+        ]}
+      >
+        or
+      </Text>
+      <TouchableOpacity
+        style={[
+          styles.mediumButton,
+          {
+            backgroundColor: "#ffffff",
+          },
+        ]}
+      >
+        <Text style={[{ color: "#000000" }, styles.mediumFont]}>
+          Sign in with Google
         </Text>
-      </View>
-    </Block>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.mediumButton,
+          {
+            backgroundColor: "#000000",
+          },
+        ]}
+      >
+        <Text style={[{ color: "#ffffff" }, styles.mediumFont]}>
+          Sign in with Apple
+        </Text>
+      </TouchableOpacity>
+      <Text>
+        Don't have an account yet?
+        <TouchableOpacity onPress={handleRegister}>
+          <Text style={{ color: "#4169E1", fontWeight: "bold" }}>
+            {" "}
+            Register
+          </Text>
+        </TouchableOpacity>
+      </Text>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000000",
-  },
-  image: {
-    height: 200,
-    width: 200,
-    borderColor: "transparent",
-    borderRadius: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  input: {
-    width: 250,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "transparent",
-  },
-  passwordinput: {
-    width: 250,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: "transparent",
-  },
-  loginButton: {
-    backgroundColor: "#4682B4",
-    padding: 10,
-    width: 250,
-    height: 50,
-    borderRadius: 25,
-    marginTop: 10,
-    borderColor: "transparent",
-    borderRadius: 50,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
-    elevation: 5,
-    borderWidth: 1,
-  },
-});
 
 export default Login;

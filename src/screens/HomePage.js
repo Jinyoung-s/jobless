@@ -3,18 +3,13 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  StyleSheet,
   Image,
+  TextInput,
 } from "react-native";
-
-import {
-  getCollection,
-  getCollectionByOrder,
-  getCollectionByQuery,
-} from "../Api/FirebaseDb";
-import React, { useState, useEffect, useCallback } from "react";
+import { styles } from "../styles/styles";
+import { getCollectionByQuery } from "../Api/FirebaseDb";
+import React, { useState, useEffect } from "react";
 import { db, collection, auth } from "../../firebaseConfig";
-import { Button, Card } from "galio-framework";
 import {
   query,
   orderBy,
@@ -23,8 +18,6 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import defaultImage from "../assets/default-image.png";
-import { useFocusEffect } from "@react-navigation/native";
 
 function Home({ navigation, route }) {
   const [items, setItems] = useState([]);
@@ -139,53 +132,47 @@ function Home({ navigation, route }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.homeContainer}>
+      <View style={styles.searcBarContainer}>
+        <TextInput style={styles.input} placeholder="Search" />
+        <TouchableOpacity
+          styles={styles.locationButton}
+          onPress={() => navigation.navigate("Set location")}
+        >
+          <Text
+            style={{
+              color: "#ffffff",
+              fontWeight: "600",
+              textAlign: "right",
+              paddingHorizontal: 10,
+              fontSize: 18,
+            }}
+          >
+            Guelph, ON - 10km
+          </Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={items}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.container}
         onEndReached={fetchMore}
         onEndReachedThreshold={0.5}
+        ListHeaderComponent={() => (
+          <Text
+            style={{
+              paddingTop: 10,
+              paddingStart: 10,
+              fontSize: 30,
+              fontWeight: "500",
+            }}
+          >
+            Search results
+          </Text>
+        )}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 4,
-  },
-  postContainer: {
-    flexDirection: "row",
-    marginBottom: 16,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    padding: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  postImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-  },
-  postDetails: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  postTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-});
 
 export default Home;
