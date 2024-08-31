@@ -122,13 +122,9 @@ function App({ navigation }) {
               <View>
                 <View style={{ flexDirection: "row" }}>
                   <Ionicons name="star" size={15} color="orange" />
-
                   <Ionicons name="star" size={15} color="orange" />
-
                   <Ionicons name="star" size={15} color="orange" />
-
                   <Ionicons name="star" size={15} color="orange" />
-
                   <Ionicons name="star" size={15} color="gray" />
                 </View>
                 <Text>312 reviews</Text>
