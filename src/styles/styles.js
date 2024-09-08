@@ -83,18 +83,22 @@ export const styles = StyleSheet.create({
   },
   profileHeader: {
     height: 200,
-    backgroundColor: "#ff00ff",
     margin: 0,
     padding: 0,
   },
   profilePicture: {
-    borderColor: "#000",
-    borderWidth: 2,
+    borderColor: "#ffffff",
+    borderWidth: 3,
     height: 150,
     width: 150,
     borderRadius: 75,
   },
   cardProfile: {
-    paddingHorizontal: 10,
+    marginTop: -90,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

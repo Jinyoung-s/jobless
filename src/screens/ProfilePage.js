@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import defaultImage from "../assets/default-image.png";
 import { Dimensions } from "react-native";
 import { styles } from "../styles/styles";
+import ProfileTab from "./profileTab";
 function App({ navigation }) {
   const [profileImg, setprofileImg] = useState("");
   const [user, setUser] = useState({
@@ -73,104 +74,67 @@ function App({ navigation }) {
 
   return (
     <View>
-      <View>
-        {/* profile header */}
+      <View style={styles.profileHeader}>
         <Image
           source={profileImg ? { uri: profileImg } : defaultImage}
           style={styles.profileHeader}
         />
-        <View style={styles.cardProfile}>
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: -80,
-              paddingHorizontal: 10,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Image
-              source={profileImg ? { uri: profileImg } : defaultImage}
-              style={styles.profilePicture}
-            />
-            <TouchableOpacity
-              style={[
-                styles.mediumButton,
-                {
-                  backgroundColor: "#006A79",
-                },
-              ]}
-            >
-              <Text style={[{ color: "#ffffff" }, styles.mediumFont]}>
-                Message
-              </Text>
-            </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: "#3BA9B8",
+            position: "absolute",
+            top: 10,
+            right: 10,
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 10,
+          }}
+          onPress={editProfile}
+        >
+          <Text style={[{ color: "#ffffff" }, styles.mediumFont]}>
+            Edit profile
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.cardProfile}>
+        <Image
+          source={profileImg ? { uri: profileImg } : defaultImage}
+          style={styles.profilePicture}
+        />
+        <Text style={{ fontSize: 40, fontWeight: "500", paddingTop: 10 }}>
+          {user.firstName} {user.lastName}
+        </Text>
+        <Text style={styles.mediumFont}>Guelph, ON</Text>
+
+        <Text style={[styles.mediumFont, { paddingVertical: 10 }]}>
+          This is my introduction, please read it before anythingelse
+        </Text>
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center" }}
+        >
+          <Text style={{ fontSize: 40, fontWeight: "bold", marginRight: 5 }}>
+            4.8
+          </Text>
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              <Ionicons name="star" size={15} color="orange" />
+              <Ionicons name="star" size={15} color="orange" />
+              <Ionicons name="star" size={15} color="orange" />
+              <Ionicons name="star" size={15} color="orange" />
+              <Ionicons name="star" size={15} color="gray" />
+            </View>
+            <Text>312 reviews</Text>
           </View>
-          <View style={{ padding: 10 }}>
-            <Text style={{ fontSize: 40, fontWeight: "500" }}>
-              {user.firstName} {user.lastName}
-            </Text>
-            <Text style={styles.mediumFont}>Guelph, ON</Text>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
-            >
-              <Text
-                style={{ fontSize: 40, fontWeight: "bold", marginRight: 5 }}
-              >
-                4.8
-              </Text>
-              <View>
-                <View style={{ flexDirection: "row" }}>
-                  <Ionicons name="star" size={15} color="orange" />
-                  <Ionicons name="star" size={15} color="orange" />
-                  <Ionicons name="star" size={15} color="orange" />
-                  <Ionicons name="star" size={15} color="orange" />
-                  <Ionicons name="star" size={15} color="gray" />
-                </View>
-                <Text>312 reviews</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            style={[
-              styles.mediumButton,
-              {
-                backgroundColor: "#006A79",
-              },
-            ]}
-            onPress={editProfile}
-          >
-            <Text style={{ color: "white" }}>Edit</Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.optionContainer}>
-        <View style={styles.cardOption}>
-          <View style={styles.options}>
-            <Ionicons name="list" size={50} color="black" style={styles.icon} />
-            <Text style={styles.separator}>|</Text>
-            <Ionicons
-              name="infinite"
-              size={50}
-              color="black"
-              style={styles.icon}
-            />
-            <Text style={styles.separator}>|</Text>
-            <Ionicons
-              name="timer"
-              size={50}
-              color="black"
-              style={styles.icon}
-            />
-          </View>
-        </View>
-      </View>
-
-      <View>
+      {/* <View>
         <TouchableOpacity style={styles.signOut} onPress={handleLogout}>
           Sign Out
         </TouchableOpacity>
+      </View> */}
+      <View>
+        <ProfileTab />
       </View>
     </View>
   );
