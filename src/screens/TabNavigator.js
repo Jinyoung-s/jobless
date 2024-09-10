@@ -137,36 +137,17 @@ function TabNavigator({ navigation }) {
         name="Home"
         component={HomeStackScreen}
         options={{
-          // headerStyle: {
-          //   backgroundColor: primaryColor,
-          //   borderBottomWidth: 0,
-          // },
-          // headerTintColor: "#000000",
-          // headerTitleStyle: {
-          //   fontWeight: "500",
-          // },
-          headerShown: false,
-
-          headerTitle: "",
+          headerStyle: {
+            backgroundColor: primaryColor,
+            borderBottomWidth: 0,
+          },
+          headerTintColor: "#ffffff",
+          headerTitleStyle: {
+            fontWeight: "500",
+          },
+          headerShown: true,
+          headerTitle: "Home",
           headerTitleAlign: "center",
-          // headerRight: () => (
-          //   <View style={[styles.headerLeft, { flexDirection: "column" }]}>
-          //     <View style={[styles.avatarContainer, { flexDirection: "row" }]}>
-          //       {/* <Image source={{ uri: profileImg.profilePicture }} style={styles.avatar} /> */}
-          //       {profileImg ? (
-          //         <Image source={{ uri: profileImg }} style={styles.avatar} />
-          //       ) : null}
-          //       <Text style={styles.headerText}>{user.firstName}</Text>
-          //     </View>
-          //   </View>
-          // ),
-          // headerLeft: () => (
-          //   <View style={{ flexDirection: "row", marginRight: 10 }}>
-          //     <TouchableOpacity onPress={showAlert}>
-          //       <Ionicons name="notifications" size={24} color="#000000" />
-          //     </TouchableOpacity>
-          //   </View>
-          // ),
         }}
       />
 

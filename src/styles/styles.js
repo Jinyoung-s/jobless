@@ -81,4 +81,24 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 8,
   },
+  profileHeader: {
+    height: 200,
+    margin: 0,
+    padding: 0,
+  },
+  profilePicture: {
+    borderColor: "#ffffff",
+    borderWidth: 3,
+    height: 150,
+    width: 150,
+    borderRadius: 75,
+  },
+  cardProfile: {
+    marginTop: -90,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
