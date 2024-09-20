@@ -3,6 +3,16 @@ import { View, TouchableOpacity, Image, TextInput, Text } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
+import * as WebBrowser from "expo-web-browser";
+import { ResponseType } from "expo-auth-session";
+import * as Google from "expo-auth-session/providers/google";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithCredential,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 import { styles } from "../styles/styles";
 
@@ -10,6 +20,30 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
+    clientId:
+      "635705960661-mkanqrejbjfbgemk8d2kp14s7ifgkdrc.apps.googleusercontent.com",
+  });
+
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { id_token } = response.params;
+      const auth = getAuth();
+      const credential = GoogleAuthProvider.credential(id_token);
+      signInWithCredential(auth, credential);
+    }
+  }, [response]);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const { uid, email, displayName, accessToken } = user;
+      console.log("uid :", uid);
+      console.log("email :", email);
+      console.log("displayName :", displayName);
+      console.log("accessToken :", accessToken);
+    }
+  });
 
   useEffect(() => {
     const unscribe = auth.onAuthStateChanged((user) => {
@@ -96,6 +130,7 @@ const Login = () => {
             backgroundColor: "#ffffff",
           },
         ]}
+        onPress={promptAsync}
       >
         <Text style={[{ color: "#000000" }, styles.mediumFont]}>
           Sign in with Google

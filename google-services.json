@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "938814888188-d4ag5uqtpq8fl3psfb92amtul06ccjec.apps.googleusercontent.com",
+          "client_id": "938814888188-25grrk6513kscr6nrd559m0tfo8e5lo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unemployed.jobless",
+            "certificate_hash": "670a948d3dffedebbec0d4dc29e927b6967e624c"
+          }
+        },
+        {
+          "client_id": "938814888188-srsj1jhghpo1kdan6n24mg8pf1ogh8u2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +37,13 @@
             {
               "client_id": "938814888188-d4ag5uqtpq8fl3psfb92amtul06ccjec.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "938814888188-qn28rrifjuuv279v5ft4ur49o02t7h05.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.unemployed.jobless"
+              }
             }
           ]
         }

@@ -17,6 +17,8 @@ import {
   limit,
   getDocs,
   where,
+  endAt,
+  startAt,
 } from "firebase/firestore";
 
 function Home({ navigation, route }) {
@@ -43,27 +45,32 @@ function Home({ navigation, route }) {
   };
 
   const fetchData = async (userId, searchText) => {
-    var q = null;
+    let q;
     if (searchText) {
-      q = query(
-        collection(db, "post"),
-        where("title", ">=", searchText.toLowerCase()),
-        where("title", "<=", searchText.toLowerCase() + "\uf8ff")
-      );
+      q = query(collection(db, "post"), orderBy("title"), limit(1000));
     } else {
-      q = query(collection(db, "post"));
+      q = query(collection(db, "post"), orderBy("created"), limit(30));
     }
 
     const snapshot = await getDocs(q);
-
-    console.log(snapshot);
-    const itemsData = await snapshot.docs.map((doc) => ({
+    const itemsData = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
-    setItems(itemsData);
-    setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
-    console.log("This: " + itemsData.owner);
+
+    if (searchText) {
+      const filteredItems = itemsData.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchText.toLowerCase())
+      );
+
+      setItems(filteredItems);
+      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+    } else {
+      setItems(itemsData);
+      setLastVisible(snapshot.docs[snapshot.docs.length - 1]);
+    }
 
     // Get the profile picture in the profileimages collection
     if (itemsData.owner != undefined) {
@@ -79,8 +86,7 @@ function Home({ navigation, route }) {
 
   useEffect(() => {
     fetchData(auth.currentUser.uid, route.params?.searchText);
-  }, [navigation, route.params?.searchText]); // Include route.params?.searchText to listen for changes in searchText
-
+  }, [navigation, route.params?.searchText]);
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       fetchData(auth.currentUser.uid);
@@ -134,7 +140,13 @@ function Home({ navigation, route }) {
   return (
     <View style={styles.homeContainer}>
       <View style={styles.searcBarContainer}>
-        <TextInput style={styles.input} placeholder="Search" />
+        <TextInput
+          style={styles.input}
+          placeholder="Search"
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
+          onSubmitEditing={() => fetchData(auth.currentUser.uid, searchText)}
+        />
         <TouchableOpacity
           styles={styles.locationButton}
           onPress={() => navigation.navigate("Set location")}
