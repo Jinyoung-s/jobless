@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
   },
   image: {
     height: 100,
+    width: "100%",
   },
   input: {
     marginVertical: 10,
