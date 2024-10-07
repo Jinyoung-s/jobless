@@ -96,16 +96,12 @@ const PostDetail = ({ route, navigation }) => {
               replyData.user = `${userData.firstName || "Unknown"} ${
                 userData.lastName || ""
               }`;
+
+              repliesData.push({ ...replyData, id: doc.id });
+              setReplies(repliesData);
             });
           });
-
-          userPromises.push(userPromise);
-          repliesData.push({ ...replyData, id: doc.id });
         });
-
-        // Wait for all user data to be fetched and then update state
-        await Promise.all(userPromises);
-        setReplies(repliesData);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
