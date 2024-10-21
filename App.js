@@ -4,11 +4,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { auth } from "./firebaseConfig"; // Import your Firebase auth
 import { View, ActivityIndicator } from "react-native";
 import LoginPage from "./src/screens/LoginPage";
-import MainPage from "./src/screens/MainPage";
 import RegisterPage from "./src/screens/RegisterPage";
 import ProfilePage from "./src/screens/ProfilePage";
 import EditPage from "./src/screens/EditPage";
-import PostDetails from "./src/screens/PostDetails";
 import PostDetails2 from "./src/screens/PostDetail2";
 import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
