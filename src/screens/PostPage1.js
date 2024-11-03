@@ -1,0 +1,216 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
+import { Picker } from "@react-native-picker/picker";
+import { saveData, getUserData } from "../Api/FirebaseDb";
+import { storage, auth } from "../../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import defaultImage from "../assets/post-logo-removebg-preview.png";
+
+const PostCreation = ({ navigation }) => {
+  const [photos, setPhotos] = useState([]);
+  const [title, setTitle] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+
+  const handleChooseImage = () => {
+    const options = {
+      mediaType: "photo",
+      includeBase64: false,
+      selectionLimit: 10, // Limit to 10 images if required
+    };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        console.log("User cancelled photo picker");
+      } else if (response.errorCode) {
+        console.log("ImagePicker Error: ", response.errorMessage);
+      } else {
+        const selectedPhotos = response.assets.map((asset) => ({
+          uri: asset.uri,
+        }));
+        setPhotos((prevPhotos) => [...prevPhotos, ...selectedPhotos]);
+      }
+    });
+  };
+
+  const renderPhotos = () => {
+    return photos.map((photo, index) => (
+      <Image key={index} source={{ uri: photo.uri }} style={styles.photo} />
+    ));
+  };
+
+  const submitPost = async () => {
+    console.log("Title:", title);
+    console.log("Price:", price);
+    console.log("Description:", description);
+    console.log("Photos:", photos);
+    let today = new Date();
+    const uploadPromises = [];
+
+    for (let i = 0; i < photos.length; i++) {
+      const response = await fetch(photos[i].uri);
+      const blob = await response.blob();
+
+      const storageRef = ref(storage, `postImages/IMG${today.getTime()}_${i}`);
+      uploadPromises.push(uploadBytes(storageRef, blob));
+    }
+
+    try {
+      const snapshots = await Promise.all(uploadPromises);
+      const downloadURLs = await Promise.all(
+        snapshots.map((snapshot) => getDownloadURL(snapshot.ref))
+      );
+
+      const userData = await getUserData(auth.currentUser.uid);
+      const postData = {
+        title: title,
+        images: downloadURLs,
+        description,
+        price,
+        category,
+        created: new Date(),
+        owner: auth.currentUser.uid,
+        profileImg: userData?.profileImgURI || defaultImage,
+      };
+
+      await saveData("post", postData);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log("Error uploading image: ", error);
+    }
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.uploadPhotosSection}>
+        <Text style={{ fontSize: 18, marginBottom: 10 }}>
+          Upload Photos (Max 10)
+        </Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={styles.addPhotoButton}
+            onPress={handleChooseImage}
+          >
+            <Text style={styles.addPhotoButtonText}>Add Photo</Text>
+          </TouchableOpacity>
+          {renderPhotos()}
+        </ScrollView>
+      </View>
+
+      <View style={styles.inputSection}>
+        <Text style={styles.sectionTitle}>Title</Text>
+        <TextInput
+          style={styles.inputField}
+          placeholder="Enter title"
+          value={title}
+          onChangeText={(text) => setTitle(text)}
+        />
+      </View>
+
+      <View style={styles.inputSection}>
+        <Text style={styles.sectionTitle}>Price</Text>
+        <TextInput
+          style={styles.inputField}
+          placeholder="Enter price"
+          value={price}
+          onChangeText={(text) => setPrice(text)}
+          keyboardType="numeric"
+        />
+      </View>
+
+      <View style={styles.inputSection}>
+        <Text style={styles.sectionTitle}>Category</Text>
+        <Picker
+          style={styles.inputField}
+          selectedValue={category}
+          onValueChange={(itemValue) => setCategory(itemValue)}
+        >
+          <Picker.Item label="Select a category" value="" />
+          <Picker.Item label="Home Services" value="home_services" />
+          <Picker.Item label="Transportation" value="transportation" />
+          <Picker.Item label="Repairs" value="repairs" />
+          <Picker.Item label="Delivery" value="delivery" />
+          <Picker.Item label="Gardening" value="gardening" />
+          <Picker.Item label="Moving Assistance" value="moving_assistance" />
+          <Picker.Item label="Pet Care" value="pet_care" />
+          <Picker.Item label="Other" value="other" />
+        </Picker>
+      </View>
+
+      <View style={styles.inputSection}>
+        <Text style={styles.sectionTitle}>Description</Text>
+        <TextInput
+          style={[styles.inputField, styles.descriptionField]}
+          placeholder="Enter description"
+          value={description}
+          onChangeText={(text) => setDescription(text)}
+          multiline
+        />
+      </View>
+
+      <View style={styles.submitButtonSection}>
+        <Button title="Submit" onPress={submitPost} />
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    padding: 15,
+  },
+  uploadPhotosSection: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  photo: {
+    width: 100,
+    height: 100,
+    margin: 5,
+    borderRadius: 5,
+  },
+  addPhotoButton: {
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 5,
+  },
+  addPhotoButtonText: {
+    color: "#007AFF", // Blue color
+  },
+  inputSection: {
+    marginBottom: 20,
+  },
+  inputField: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+  },
+  descriptionField: {
+    height: 100,
+    textAlignVertical: "top",
+  },
+  submitButtonSection: {
+    marginTop: 20,
+  },
+});
+
+export default PostCreation;
