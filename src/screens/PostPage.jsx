@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -8,53 +8,53 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-} from "react-native";
-import { launchImageLibrary } from "react-native-image-picker";
-import { Picker } from "@react-native-picker/picker";
-import { saveData, getUserData } from "../Api/FirebaseDb";
-import { storage, auth } from "../../firebaseConfig";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import defaultImage from "../assets/post-logo-removebg-preview.png";
+} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {Picker} from '@react-native-picker/picker';
+import {saveData, getUserData} from '../Api/FirebaseDb';
+import {storage, auth} from '../../firebaseConfig';
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
+import defaultImage from '../assets/post-logo-removebg-preview.png';
 
-const PostCreation = ({ navigation }) => {
+const PostCreation = ({navigation}) => {
   const [photos, setPhotos] = useState([]);
-  const [title, setTitle] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState('');
 
   const handleChooseImage = () => {
     const options = {
-      mediaType: "photo",
+      mediaType: 'photo',
       includeBase64: false,
       selectionLimit: 10, // Limit to 10 images if required
     };
 
-    launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.log("User cancelled photo picker");
+        console.log('User cancelled photo picker');
       } else if (response.errorCode) {
-        console.log("ImagePicker Error: ", response.errorMessage);
+        console.log('ImagePicker Error: ', response.errorMessage);
       } else {
-        const selectedPhotos = response.assets.map((asset) => ({
+        const selectedPhotos = response.assets.map(asset => ({
           uri: asset.uri,
         }));
-        setPhotos((prevPhotos) => [...prevPhotos, ...selectedPhotos]);
+        setPhotos(prevPhotos => [...prevPhotos, ...selectedPhotos]);
       }
     });
   };
 
   const renderPhotos = () => {
     return photos.map((photo, index) => (
-      <Image key={index} source={{ uri: photo.uri }} style={styles.photo} />
+      <Image key={index} source={{uri: photo.uri}} style={styles.photo} />
     ));
   };
 
   const submitPost = async () => {
-    console.log("Title:", title);
-    console.log("Price:", price);
-    console.log("Description:", description);
-    console.log("Photos:", photos);
+    console.log('Title:', title);
+    console.log('Price:', price);
+    console.log('Description:', description);
+    console.log('Photos:', photos);
     let today = new Date();
     const uploadPromises = [];
 
@@ -69,7 +69,7 @@ const PostCreation = ({ navigation }) => {
     try {
       const snapshots = await Promise.all(uploadPromises);
       const downloadURLs = await Promise.all(
-        snapshots.map((snapshot) => getDownloadURL(snapshot.ref))
+        snapshots.map(snapshot => getDownloadURL(snapshot.ref)),
       );
 
       const userData = await getUserData(auth.currentUser.uid);
@@ -84,24 +84,23 @@ const PostCreation = ({ navigation }) => {
         profileImg: userData?.profileImgURI || defaultImage,
       };
 
-      await saveData("post", postData);
-      navigation.navigate("Home");
+      await saveData('post', postData);
+      navigation.navigate('Home');
     } catch (error) {
-      console.log("Error uploading image: ", error);
+      console.log('Error uploading image: ', error);
     }
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.uploadPhotosSection}>
-        <Text style={{ fontSize: 18, marginBottom: 10 }}>
+        <Text style={{fontSize: 18, marginBottom: 10}}>
           Upload Photos (Max 10)
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             style={styles.addPhotoButton}
-            onPress={handleChooseImage}
-          >
+            onPress={handleChooseImage}>
             <Text style={styles.addPhotoButtonText}>Add Photo</Text>
           </TouchableOpacity>
           {renderPhotos()}
@@ -114,7 +113,7 @@ const PostCreation = ({ navigation }) => {
           style={styles.inputField}
           placeholder="Enter title"
           value={title}
-          onChangeText={(text) => setTitle(text)}
+          onChangeText={text => setTitle(text)}
         />
       </View>
 
@@ -124,7 +123,7 @@ const PostCreation = ({ navigation }) => {
           style={styles.inputField}
           placeholder="Enter price"
           value={price}
-          onChangeText={(text) => setPrice(text)}
+          onChangeText={text => setPrice(text)}
           keyboardType="numeric"
         />
       </View>
@@ -134,8 +133,7 @@ const PostCreation = ({ navigation }) => {
         <Picker
           style={styles.inputField}
           selectedValue={category}
-          onValueChange={(itemValue) => setCategory(itemValue)}
-        >
+          onValueChange={itemValue => setCategory(itemValue)}>
           <Picker.Item label="Select a category" value="" />
           <Picker.Item label="Home Services" value="home_services" />
           <Picker.Item label="Transportation" value="transportation" />
@@ -154,7 +152,7 @@ const PostCreation = ({ navigation }) => {
           style={[styles.inputField, styles.descriptionField]}
           placeholder="Enter description"
           value={description}
-          onChangeText={(text) => setDescription(text)}
+          onChangeText={text => setDescription(text)}
           multiline
         />
       </View>
@@ -169,7 +167,7 @@ const PostCreation = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     padding: 15,
   },
   uploadPhotosSection: {
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 10,
   },
   photo: {
@@ -193,20 +191,20 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   addPhotoButtonText: {
-    color: "#007AFF", // Blue color
+    color: '#007AFF', // Blue color
   },
   inputSection: {
     marginBottom: 20,
   },
   inputField: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     padding: 10,
     borderRadius: 5,
   },
   descriptionField: {
     height: 100,
-    textAlignVertical: "top",
+    textAlignVertical: 'top',
   },
   submitButtonSection: {
     marginTop: 20,

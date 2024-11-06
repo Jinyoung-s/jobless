@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import './gesture-handler';
 import {View, ActivityIndicator, Button} from 'react-native';
@@ -17,15 +17,18 @@ import LoginPage from './src/screens/LoginPage';
 import RegisterPage from './src/screens/RegisterPage';
 import ProfilePage from './src/screens/ProfilePage';
 import EditPage from './src/screens/EditPage';
-import PostDetail from './src/screens/PostDetail2';
+import PostDetail from './src/screens/ViewJobDetails';
 import ResetPage from './src/screens/ResetPage';
 import Chat from './src/screens/ChatPage';
 import Conversation from './src/screens/ChatRoomPage';
-import TabNavigator from './src/screens/TabNavigator';
 import {NavigationProp} from '@react-navigation/native';
 import {User} from 'firebase/auth'; // Import User type from Firebase
 import Home from './src/screens/HomePage';
-import PostCreation from './src/screens/PostPage1';
+import PostCreation from './src/screens/PostPage';
+import ChatsPage from './src/screens/ChatsPage';
+import ChatPage from './src/screens/ChatPage';
+import BottomTabNavigator from './src/screens/BottomTabNavigator';
+import CustomDrawerContent from './src/screens/CustomDrawerContent';
 
 // Enable screens for improved performance
 enableScreens();
@@ -39,63 +42,59 @@ interface AuthLoadingScreenProps {
   navigation: NavigationProp<any>;
 }
 
-// function AuthLoadingScreen({navigation}: AuthLoadingScreenProps) {
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
-//       // Explicitly typing user
-//       if (user) {
-//         navigation.replace('Main'); // Navigate to Main if the user is logged in
-//       } else {
-//         navigation.replace('Login'); // Navigate to Login if the user is not logged in
-//       }
-//     });
+function AuthLoadingScreen({navigation}: AuthLoadingScreenProps) {
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
+      // Explicitly typing user
+      if (user) {
+        navigation.replace('Main'); // Navigate to Main if the user is logged in
+      } else {
+        navigation.replace('Login'); // Navigate to Login if the user is not logged in
+      }
+    });
 
-//     return () => unsubscribe();
-//   }, [navigation]);
+    return () => unsubscribe();
+  }, [navigation]);
 
-//   return (
-//     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-//       <ActivityIndicator size="large" color="#0000ff" />
-//     </View>
-//   );
-// }
-
-function HomeStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={Home}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen name="Profile" component={ProfilePage} />
-    </Stack.Navigator>
-  );
-}
-function BottomTabNavigator() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Post" component={PostCreation} />
-      <Tab.Screen name="Profile" component={ProfilePage} />
-    </Tab.Navigator>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
   );
 }
 
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="BottomNav" component={BottomTabNavigator} />
-      <Drawer.Screen name="Home2" component={HomeStack} />
-      <Drawer.Screen name="Chat" component={Chat} />
+    <Drawer.Navigator drawerContent={CustomDrawerContent}>
+      <Drawer.Screen
+        name="Login"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
+      <Drawer.Screen
+        name="Main"
+        component={BottomTabNavigator} // Assuming TabNavigator is your main navigation
+        options={{headerShown: false}}
+      />
     </Drawer.Navigator>
   );
 }
 
 function App() {
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      setUser(user.uid);
+    });
+    console.log('USER ALERT', user);
+    return () => unsubscribe();
+  }, []);
+
+  console.log('USER ALERT', user);
   return (
     <NavigationContainer>
-      <DrawerNavigator />
+      {user ? <DrawerNavigator /> : <LoginPage />}
     </NavigationContainer>
   );
 }
