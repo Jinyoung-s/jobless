@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {act, useReducer, useState} from 'react';
 import {
   View,
   Text,
@@ -16,12 +16,46 @@ import {storage, auth} from '../../firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import defaultImage from '../assets/post-logo-removebg-preview.png';
 
+function newPostReducer(state, action) {
+  switch (action.type) {
+    case 'ADD_PHOTOS':
+      return {...state, photos: [...state.photos, action.value]};
+    case 'REMOVE_PHOTO':
+      return {
+        ...state,
+        photos: state.photos.filter((photo, index) => index !== action.index),
+      };
+    case 'ADD_TITLE':
+      return {...state, title: action.value};
+    case 'ADD_PRICE':
+      return {...state, price: action.value};
+    case 'ADD_DESCRIPTION':
+      return {...state, description: action.value};
+    case 'ADD_CATEGORY':
+      return {...state, category: action.value};
+  }
+}
 const PostCreation = ({navigation}) => {
-  const [photos, setPhotos] = useState([]);
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const initalPostState = {
+    photos: [],
+    title: '',
+    price: '',
+    description: '',
+    category: '',
+  };
+
+  const [newPostState, newPostDispatch] = useReducer(
+    newPostReducer,
+    initalPostState,
+  );
+
+  const handleAddPhoto = photoUrl => {
+    newPostDispatch({type: 'ADD_PHOTO', value: photoUrl});
+  };
+
+  const handleRemovePhoto = index => {
+    newPostDispatch({type: 'REMOVE_PHOTO', index});
+  };
 
   const handleChooseImage = () => {
     const options = {
@@ -39,22 +73,23 @@ const PostCreation = ({navigation}) => {
         const selectedPhotos = response.assets.map(asset => ({
           uri: asset.uri,
         }));
-        setPhotos(prevPhotos => [...prevPhotos, ...selectedPhotos]);
+        // onChangeText={text => newPostDispatch({type: 'title', value: text})}
+        // newPostState.photos = prevPhotos => [...prevPhotos, selectedPhotos];
+        // console.log('photos log', newPostState);
+        // setPhotos(prevPhotos => [...prevPhotos, ...selectedPhotos]);
+        handleAddPhoto(...selectedPhotos);
       }
     });
   };
 
   const renderPhotos = () => {
-    return photos.map((photo, index) => (
+    return newPostState.photos.map((photo, index) => (
       <Image key={index} source={{uri: photo.uri}} style={styles.photo} />
     ));
   };
 
   const submitPost = async () => {
-    console.log('Title:', title);
-    console.log('Price:', price);
-    console.log('Description:', description);
-    console.log('Photos:', photos);
+    console.log('New post details:', newPost);
     let today = new Date();
     const uploadPromises = [];
 
@@ -103,7 +138,7 @@ const PostCreation = ({navigation}) => {
             onPress={handleChooseImage}>
             <Text style={styles.addPhotoButtonText}>Add Photo</Text>
           </TouchableOpacity>
-          {renderPhotos()}
+          {/* {renderPhotos()} */}
         </ScrollView>
       </View>
 
@@ -112,8 +147,10 @@ const PostCreation = ({navigation}) => {
         <TextInput
           style={styles.inputField}
           placeholder="Enter title"
-          value={title}
-          onChangeText={text => setTitle(text)}
+          value={newPostState.title}
+          onChangeText={text =>
+            newPostDispatch({type: 'ADD_TITLE', value: text})
+          }
         />
       </View>
 
@@ -121,9 +158,11 @@ const PostCreation = ({navigation}) => {
         <Text style={styles.sectionTitle}>Price</Text>
         <TextInput
           style={styles.inputField}
-          placeholder="Enter price"
-          value={price}
-          onChangeText={text => setPrice(text)}
+          placeholder="Enter Price"
+          value={newPostState.price}
+          onChangeText={text =>
+            newPostDispatch({type: 'ADD_PRICE', value: text})
+          }
           keyboardType="numeric"
         />
       </View>
@@ -132,8 +171,10 @@ const PostCreation = ({navigation}) => {
         <Text style={styles.sectionTitle}>Category</Text>
         <Picker
           style={styles.inputField}
-          selectedValue={category}
-          onValueChange={itemValue => setCategory(itemValue)}>
+          selectedValue={newPostState.category}
+          onValueChange={itemValue => {
+            newPostDispatch({type: 'ADD_CATEGORY', value: itemValue});
+          }}>
           <Picker.Item label="Select a category" value="" />
           <Picker.Item label="Home Services" value="home_services" />
           <Picker.Item label="Transportation" value="transportation" />
@@ -151,8 +192,10 @@ const PostCreation = ({navigation}) => {
         <TextInput
           style={[styles.inputField, styles.descriptionField]}
           placeholder="Enter description"
-          value={description}
-          onChangeText={text => setDescription(text)}
+          value={newPostState.description}
+          onChangeText={text =>
+            newPostDispatch({type: 'ADD_DESCRIPTION', value: text})
+          }
           multiline
         />
       </View>
