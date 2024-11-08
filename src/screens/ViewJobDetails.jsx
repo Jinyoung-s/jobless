@@ -393,4 +393,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostDetail;
+export default ViewJobDetails;

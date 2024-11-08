@@ -19,11 +19,11 @@ import defaultImage from '../assets/post-logo-removebg-preview.png';
 function newPostReducer(state, action) {
   switch (action.type) {
     case 'ADD_PHOTOS':
-      return {...state, photos: [...state.photos, action.value]};
+      return {...state, photos: [...state.photos.flat(), action.value]};
     case 'REMOVE_PHOTO':
       return {
         ...state,
-        photos: state.photos.filter((photo, index) => index !== action.index),
+        photos: state.photos.filter(index => index !== action.index),
       };
     case 'ADD_TITLE':
       return {...state, title: action.value};
@@ -35,7 +35,8 @@ function newPostReducer(state, action) {
       return {...state, category: action.value};
   }
 }
-const PostCreation = ({navigation}) => {
+
+const PostForm = ({navigation}) => {
   const initalPostState = {
     photos: [],
     title: '',
@@ -73,18 +74,17 @@ const PostCreation = ({navigation}) => {
         const selectedPhotos = response.assets.map(asset => ({
           uri: asset.uri,
         }));
-        // onChangeText={text => newPostDispatch({type: 'title', value: text})}
-        // newPostState.photos = prevPhotos => [...prevPhotos, selectedPhotos];
-        // console.log('photos log', newPostState);
-        // setPhotos(prevPhotos => [...prevPhotos, ...selectedPhotos]);
-        handleAddPhoto(...selectedPhotos);
+        newPostDispatch({type: 'ADD_PHOTOS', value: selectedPhotos.flat()});
+        console.log('new poster', newPostState.photos);
       }
     });
   };
 
   const renderPhotos = () => {
     return newPostState.photos.map((photo, index) => (
-      <Image key={index} source={{uri: photo.uri}} style={styles.photo} />
+      <TouchableOpacity key={index} onPress={handleRemovePhoto}>
+        <Image source={{uri: photo.uri}} style={styles.photo} />
+      </TouchableOpacity>
     ));
   };
 
@@ -138,7 +138,7 @@ const PostCreation = ({navigation}) => {
             onPress={handleChooseImage}>
             <Text style={styles.addPhotoButtonText}>Add Photo</Text>
           </TouchableOpacity>
-          {/* {renderPhotos()} */}
+          {renderPhotos()}
         </ScrollView>
       </View>
 
@@ -254,4 +254,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostCreation;
+export default PostForm;

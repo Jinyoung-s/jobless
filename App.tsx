@@ -3,30 +3,14 @@ import React, {useEffect, useState} from 'react';
 import './gesture-handler';
 import {View, ActivityIndicator, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {enableScreens} from 'react-native-screens';
 import {auth} from './firebaseConfig'; // Import your Firebase auth
 import LoginPage from './src/screens/LoginPage';
-import RegisterPage from './src/screens/RegisterPage';
-import ProfilePage from './src/screens/ProfilePage';
-import EditPage from './src/screens/EditPage';
-import PostDetail from './src/screens/ViewJobDetails';
-import ResetPage from './src/screens/ResetPage';
-import Chat from './src/screens/ChatPage';
-import Conversation from './src/screens/ChatRoomPage';
 import {NavigationProp} from '@react-navigation/native';
 import {User} from 'firebase/auth'; // Import User type from Firebase
-import Home from './src/screens/HomePage';
-import PostCreation from './src/screens/PostPage';
-import ChatsPage from './src/screens/ChatsPage';
-import ChatPage from './src/screens/ChatPage';
 import BottomTabNavigator from './src/screens/BottomTabNavigator';
 import CustomDrawerContent from './src/screens/CustomDrawerContent';
 

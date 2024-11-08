@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomePage from './HomePage';
-import PostPage from './PostPage';
+import PostForm from './PostForm';
 import ChatsPage from './ChatsPage';
 import ProfilePage from './ProfilePage';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,7 +18,6 @@ import {
 import {primaryColor} from '../styles/styles';
 import SetLocation from './SetLocationPage';
 import ViewJobDetails from './ViewJobDetails';
-import PostDetail2 from './ViewJobDetails';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -155,7 +154,7 @@ function BottomTabNavigator({navigation}) {
 
       <Tab.Screen
         name="Post"
-        component={PostPage}
+        component={PostForm}
         options={{
           headerStyle: {
             backgroundColor: '#000000',
