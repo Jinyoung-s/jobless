@@ -4,7 +4,7 @@ import HomePage from "./HomePage";
 import PostPage from "./PostPage1";
 import ChatsPage from "./ChatsPage";
 import ProfilePage from "./ProfilePage";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { auth, db } from "../../firebaseConfig";
 import { StyleSheet, Image, Alert } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -105,16 +105,17 @@ function TabNavigator({ navigation }) {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size, newMessage }) => {
           let iconName;
+          console.log(route.name)
 
           if (route.name === "Home") {
-            iconName = focused ? "home" : "home-outline";
+            iconName = focused ? "home" : "home";
           } else if (route.name === "Post") {
             iconName = focused ? "add-circle" : "add-circle-outline";
           } else if (route.name === "Chats") {
             if (isNew) {
               iconName = focused
-                ? "chatbubble-ellipses-sharp"
-                : "chatbubble-ellipses-outline";
+                ? "chat"
+                : "chat";
             } else {
               iconName = "person";
             }
@@ -122,7 +123,7 @@ function TabNavigator({ navigation }) {
             iconName = focused ? "person" : "person-outline";
           }
 
-          return <Icon name="{iconName}" size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: "#000000",
@@ -145,9 +146,18 @@ function TabNavigator({ navigation }) {
           headerTitleStyle: {
             fontWeight: "500",
           },
-          headerShown: true,
+          headerShown: false,
           headerTitle: "Home",
           headerTitleAlign: "center",
+          headerLeft: () => (
+            <Icon
+              name="menu1" 
+              size={24}
+              color="#ffffff"
+              style={{ marginLeft: 10 }}
+              onPress={() => navigation.toggleDrawer()} 
+            />
+          ),          
         }}
       />
 

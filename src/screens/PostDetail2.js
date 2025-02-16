@@ -115,6 +115,9 @@ const PostDetail = ({ route, navigation }) => {
       Alert.alert("Error", "Reply cannot be empty");
       return;
     }
+
+    console.log(auth.currentUser);
+
     try {
       const newReply = {
         postId,
@@ -125,7 +128,7 @@ const PostDetail = ({ route, navigation }) => {
       await addDoc(collection(db, "replies"), newReply);
       setReplies([
         ...replies,
-        { ...newReply, user: auth.currentUser.displayName || "Anonymous" },
+        { ...newReply, user: auth.currentUser.email || "Anonymous" },
       ]);
       setReplyText("");
     } catch (error) {

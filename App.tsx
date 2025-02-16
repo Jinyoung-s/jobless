@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, TouchableOpacity  } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { enableScreens } from 'react-native-screens';
-import { auth } from "./firebaseConfig"; // Import your Firebase auth
+import { auth } from "./firebaseConfig"; 
 import LoginPage from "./src/screens/LoginPage";
 import RegisterPage from "./src/screens/RegisterPage";
 import ProfilePage from "./src/screens/ProfilePage";
@@ -13,25 +14,27 @@ import ResetPage from "./src/screens/ResetPage";
 import Chat from "./src/screens/ChatPage";
 import Conversation from "./src/screens/ChatRoomPage";
 import TabNavigator from "./src/screens/TabNavigator";
+import DrawerBar from "./src/screens/DrawerBar"; // Optional custom drawer
 import { NavigationProp } from '@react-navigation/native';
-import { User } from 'firebase/auth'; // Import User type from Firebase
+import { User } from 'firebase/auth';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { primaryColor } from "./src/styles/styles";
 
-// Enable screens for improved performance
 enableScreens();
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator(); // Drawer Navigator
 
-// Define the props type for the AuthLoadingScreen component
 interface AuthLoadingScreenProps {
   navigation: NavigationProp<any>;
 }
 
 function AuthLoadingScreen({ navigation }: AuthLoadingScreenProps) {
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user: User | null) => { // Explicitly typing user
+    const unsubscribe = auth.onAuthStateChanged((user: User | null) => {
       if (user) {
-        navigation.replace("Main"); // Navigate to Main if the user is logged in
+        navigation.replace("Main");
       } else {
-        navigation.replace("Login"); // Navigate to Login if the user is not logged in
+        navigation.replace("Login");
       }
     });
 
@@ -45,7 +48,50 @@ function AuthLoadingScreen({ navigation }: AuthLoadingScreenProps) {
   );
 }
 
-function App() {
+// Drawer Navigator with screens
+function DrawerNavigator() {
+  return (
+    <Drawer.Navigator
+      initialRouteName="Main"
+      screenOptions={({ navigation }) => ({
+        headerShown: true, // Changed to true to show the header
+        headerStyle: {
+          backgroundColor: primaryColor,
+          borderBottomWidth: 0,
+        },
+        headerTintColor: "#ffffff",
+          headerTitleStyle: {
+          fontWeight: "500",
+        },        
+        headerLeft: () => (
+          <TouchableOpacity 
+            onPress={() => navigation.toggleDrawer()}
+            style={{ marginLeft: 16 }}
+          >
+            <Icon 
+              name="menu"  // Changed to lowercase
+              size={24}
+              color="#ffffff"
+            />
+          </TouchableOpacity>
+        ),
+      })}
+    >
+      <Drawer.Screen 
+        name="Main" 
+        component={TabNavigator} 
+        options={{ 
+          headerTitle: "Home",  // Added a title
+        }} 
+      />
+      <Drawer.Screen name="Profile" component={ProfilePage} />
+      <Drawer.Screen name="Chat" component={Chat} />
+      <Drawer.Screen name="Settings" component={ResetPage} />
+    </Drawer.Navigator>
+  );
+}
+
+function App({ navigation }: any) {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="AuthLoading">
@@ -61,16 +107,14 @@ function App() {
         />
         <Stack.Screen
           name="Main"
-          component={TabNavigator} // Assuming TabNavigator is your main navigation
+          component={DrawerNavigator} // Embed DrawerNavigator here
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Edit" component={EditPage} />
         <Stack.Screen name="Details" component={PostDetail} />
         <Stack.Screen name="Conversation" component={Conversation} />
         <Stack.Screen name="Register" component={RegisterPage} />
-        <Stack.Screen name="Profile" component={ProfilePage} />
         <Stack.Screen name="Reset" component={ResetPage} />
-        <Stack.Screen name="Chat" component={Chat} />
       </Stack.Navigator>
     </NavigationContainer>
   );
