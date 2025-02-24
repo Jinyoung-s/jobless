@@ -128,11 +128,11 @@ function App({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/* <View>
+      <View>
         <TouchableOpacity style={styles.signOut} onPress={handleLogout}>
           Sign Out
         </TouchableOpacity>
-      </View> */}
+      </View>
       <View>
         <ProfileTab />
       </View>
